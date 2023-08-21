@@ -1,4 +1,4 @@
-import ModuleCard from "../../components/modulecard/ModuleCard";
+import ModuleCard from "../../components/modulecards/ModuleCard";
 
 import "./Home.scss";
 

@@ -48,7 +48,22 @@ function ModuleCard({ title, description, moduleLink, coverImg, info }: Props) {
       />
     );
   } else {
-    cardCover = <div className="default-card-cover">{title}</div>;
+    cardCover = (
+      <div
+        style={{
+          height: "140px",
+          color: "white",
+          backgroundColor: "gray",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          fontWeight: "bold",
+          fontSize: "x-large",
+        }}
+      >
+        {title}
+      </div>
+    );
   }
 
   let infoElement = undefined;
