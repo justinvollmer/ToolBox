@@ -37,6 +37,20 @@ function ModuleCard({ title, description, moduleLink, coverImg, info }: Props) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  let cardCover = undefined;
+  if (coverImg != undefined) {
+    cardCover = (
+      <CardMedia
+        component="img"
+        height="140"
+        image={coverImg}
+        alt="cover image"
+      />
+    );
+  } else {
+    cardCover = <div className="default-card-cover">{title}</div>;
+  }
+
   let infoElement = undefined;
   if (info != undefined) {
     infoElement = (
@@ -52,12 +66,7 @@ function ModuleCard({ title, description, moduleLink, coverImg, info }: Props) {
     <>
       <Card sx={{ maxWidth: 345 }}>
         <CardActionArea component={Link} to={moduleLink}>
-          <CardMedia
-            component="img"
-            height="140"
-            image={coverImg}
-            alt="cover image"
-          />
+          {cardCover}
           <CardContent>
             <Typography gutterBottom variant="h5" component="div">
               {title}

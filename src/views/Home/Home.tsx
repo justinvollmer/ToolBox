@@ -2,8 +2,6 @@ import ModuleCard from "../../components/modulecard/ModuleCard";
 
 import "./Home.scss";
 
-import linkmanagerCoverImg from "../../assets/modules/linkmanager/coverImg.png";
-
 function LinkManagerCard() {
   const title = "Link-Manager";
   const description = "Bulk download media via a list of links.";
@@ -15,7 +13,6 @@ function LinkManagerCard() {
     <ModuleCard
       title={title}
       description={description}
-      coverImg={linkmanagerCoverImg}
       moduleLink={moduleLink}
       info={info}
     />

@@ -4,3 +4,15 @@
     -moz-user-select: none;
     -o-user-select: none;
 }
+
+.default-card-cover {
+    height: 140px;
+    color: white;
+    background-color: gray;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: x-large;
+}
