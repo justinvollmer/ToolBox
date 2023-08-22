@@ -1,5 +1,5 @@
+@import '../../utils/default';
+
 .logo-typography-global {
-    user-select: none;
-    -moz-user-select: none;
-    -o-user-select: none;
-  }
+    @include vendorPrefix(user-select, none);
+}
