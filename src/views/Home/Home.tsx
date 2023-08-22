@@ -21,7 +21,7 @@ function LinkManagerCard() {
 
 function Home() {
   return (
-    <div className="module-container">
+    <div className="main-container">
       <LinkManagerCard />
     </div>
   );
