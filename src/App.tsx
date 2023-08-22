@@ -13,7 +13,9 @@ function App() {
         <Route path="/" element={<BaseLayout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
-          <Route path="settings" element={null} />
+          <Route path="linkmanager" element={null} />
+          <Route path="watchlist" element={null} />
+          <Route path="events" element={null} />
         </Route>
       </Routes>
     </Router>
