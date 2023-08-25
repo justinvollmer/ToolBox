@@ -1,5 +1,7 @@
 import ModuleCard from "../../components/modulecards/ModuleCard";
 
+import { Creator } from "../../components/badges/BadgeCollection";
+
 import "./Home.scss";
 
 function LinkManagerCard() {
@@ -15,6 +17,50 @@ function LinkManagerCard() {
       description={description}
       moduleLink={moduleLink}
       info={info}
+      moduleCreator="Justin Vollmer"
+      creatorBadge={<Creator />}
+      certified
+    />
+  );
+}
+
+function WatchlistCard() {
+  const title = "Movie/TV Watchlist";
+  const description =
+    "Create a list to plan out what you are going to watch next.";
+  const moduleLink = "/watchlist";
+  const info = "Create a list to plan out what you are going to watch next.";
+
+  return (
+    <ModuleCard
+      title={title}
+      description={description}
+      moduleLink={moduleLink}
+      info={info}
+      moduleCreator="Justin Vollmer"
+      creatorBadge={<Creator />}
+      certified
+    />
+  );
+}
+
+function EventCalendarCard() {
+  const title = "Event Calendar";
+  const description =
+    "An easy way to manage your time schedule and getting an overview for upcoming events.";
+  const moduleLink = "/events";
+  const info =
+    "An easy way to manage your time schedule and getting an overview for upcoming events.";
+
+  return (
+    <ModuleCard
+      title={title}
+      description={description}
+      moduleLink={moduleLink}
+      info={info}
+      moduleCreator="Justin Vollmer"
+      creatorBadge={<Creator />}
+      certified
     />
   );
 }
@@ -23,6 +69,8 @@ function Home() {
   return (
     <div className="main-container">
       <LinkManagerCard />
+      <WatchlistCard />
+      <EventCalendarCard />
     </div>
   );
 }

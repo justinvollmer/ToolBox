@@ -7,6 +7,8 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Button, CardActionArea, CardActions } from "@mui/material";
 
+import { CertifiedModule } from "../badges/BadgeCollection";
+
 import { Link } from "react-router-dom";
 
 import "./ModuleCard.scss";
@@ -17,6 +19,9 @@ interface Props {
   moduleLink: string;
   coverImg?: string;
   info?: string;
+  moduleCreator?: string;
+  creatorBadge?: React.ReactNode;
+  certified?: boolean;
 }
 
 const style = {
@@ -32,7 +37,16 @@ const style = {
   p: 4,
 };
 
-function ModuleCard({ title, description, moduleLink, coverImg, info }: Props) {
+function ModuleCard({
+  title,
+  description,
+  moduleLink,
+  coverImg,
+  info,
+  moduleCreator,
+  creatorBadge,
+  certified,
+}: Props) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -77,6 +91,25 @@ function ModuleCard({ title, description, moduleLink, coverImg, info }: Props) {
     );
   }
 
+  let moduleCreatorElement = undefined;
+  if (moduleCreator != undefined) {
+    moduleCreatorElement = (
+      <>
+        <hr />
+        <div className="unselectable">
+          Creator:
+          <p className="creator-name">{moduleCreator}</p>
+          {creatorBadge}
+        </div>
+      </>
+    );
+  }
+
+  let certifiedBadge = undefined;
+  if (certified) {
+    certifiedBadge = CertifiedModule();
+  }
+
   return (
     <>
       <Card sx={{ maxWidth: 345 }}>
@@ -103,12 +136,13 @@ function ModuleCard({ title, description, moduleLink, coverImg, info }: Props) {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <div>
               <span className="unselectable" style={{ fontWeight: "bold" }}>
-                {title}
+                {title} {certifiedBadge}
               </span>
             </div>
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <span className="unselectable">{info}</span>
+            {moduleCreatorElement}
           </Typography>
         </Box>
       </Modal>

@@ -39,7 +39,7 @@ function Navbar() {
   };
 
   return (
-    <AppBar position="static" sx={{ background: "#0f0f0f" }}>
+    <AppBar position="static" sx={{ background: "#0b3781" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <ViewInArIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
@@ -142,7 +142,7 @@ function Navbar() {
                 />
               </IconButton>
             </Tooltip>
-            <Button>{/*TODO: Implement settings*/}</Button>
+            <Button>{/*TODO: Implement Settings functionality*/}</Button>
           </Box>
         </Toolbar>
       </Container>

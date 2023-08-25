@@ -1,5 +1,6 @@
 @import '../../utils/default';
 
-.logo-typography-global {
+.unselectable {
+    cursor: default;
     @include vendorPrefix(user-select, none);
 }
