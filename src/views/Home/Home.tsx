@@ -1,5 +1,7 @@
 import ModuleCard from "../../components/modulecards/ModuleCard";
 
+import { Creator } from "../../components/badges/BadgeCollection";
+
 import "./Home.scss";
 
 function LinkManagerCard() {
@@ -15,6 +17,9 @@ function LinkManagerCard() {
       description={description}
       moduleLink={moduleLink}
       info={info}
+      moduleCreator="Justin Vollmer"
+      creatorBadge={<Creator />}
+      certified
     />
   );
 }
@@ -32,6 +37,9 @@ function WatchlistCard() {
       description={description}
       moduleLink={moduleLink}
       info={info}
+      moduleCreator="Justin Vollmer"
+      creatorBadge={<Creator />}
+      certified
     />
   );
 }
@@ -50,6 +58,9 @@ function EventCalendarCard() {
       description={description}
       moduleLink={moduleLink}
       info={info}
+      moduleCreator="Justin Vollmer"
+      creatorBadge={<Creator />}
+      certified
     />
   );
 }
