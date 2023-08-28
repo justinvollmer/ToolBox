@@ -55,8 +55,4 @@ function LinkManagerMenu() {
   );
 }
 
-function LinkManager() {
-  return <LinkManagerMenu />;
-}
-
-export default LinkManager;
+export { LinkManagerMenu };
