@@ -1,3 +1,4 @@
+import * as React from "react";
 import { Container, Paper, Button, Box, Typography } from "@mui/material";
 
 import "./LinkManager.scss";
@@ -30,29 +31,42 @@ const styles = {
 };
 
 function LinkManagerMenu() {
+  const [isVisible, setIsVisible] = React.useState(true);
+
+  const toggleVisibility = () => {
+    setIsVisible(!isVisible);
+  };
+
   return (
     <Container maxWidth="sm" sx={styles.container}>
-      <Paper elevation={3} sx={{ padding: "16px", textAlign: "center" }}>
-        <Typography className="unselectable" variant="h4" sx={styles.header}>
-          Link-Manager
-        </Typography>
-        <Box sx={styles.buttonContainer}>
-          <Button
-            variant="contained"
-            sx={{ ...styles.greenButton, width: "100%" }}
-          >
-            Create
-          </Button>
-          <Button
-            variant="contained"
-            sx={{ ...styles.blueButton, width: "100%" }}
-          >
-            Import
-          </Button>
-        </Box>
-      </Paper>
+      {isVisible && (
+        <Paper elevation={3} sx={{ padding: "16px", textAlign: "center" }}>
+          <Typography className="unselectable" variant="h4" sx={styles.header}>
+            Link-Manager
+          </Typography>
+          <Box sx={styles.buttonContainer}>
+            <Button
+              variant="contained"
+              sx={{ ...styles.greenButton, width: "100%" }}
+              onClick={toggleVisibility}
+            >
+              Create
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ ...styles.blueButton, width: "100%" }}
+            >
+              Import
+            </Button>
+          </Box>
+        </Paper>
+      )}
     </Container>
   );
 }
 
-export { LinkManagerMenu };
+function LinkManager() {
+  return <LinkManagerMenu />;
+}
+
+export { LinkManager };
