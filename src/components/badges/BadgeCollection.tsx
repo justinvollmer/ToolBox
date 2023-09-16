@@ -4,7 +4,7 @@ import {
   VerifiedUser as CertifiedIcon,
 } from "@mui/icons-material";
 
-function Creator() {
+function AppCreator() {
   const title: string = "App Creator";
 
   const description: string =
@@ -37,4 +37,4 @@ function CertifiedModule() {
   );
 }
 
-export { Creator, CertifiedModule };
+export { AppCreator, CertifiedModule };

@@ -1,11 +1,11 @@
-import { Creator } from "../../components/badges/BadgeCollection";
+import { AppCreator } from "../../components/badges/BadgeCollection";
 
 import "./About.scss";
 
 function About() {
   return (
     <div>
-      <p className="unselectable">App by Justin Vollmer {Creator()}</p>
+      <p className="unselectable">App by Justin Vollmer {<AppCreator />}</p>
     </div>
   );
 }

@@ -19,9 +19,11 @@ interface Props {
   moduleLink: string;
   coverImg?: string;
   info?: string;
-  moduleCreator?: string;
-  creatorBadge?: React.ReactNode;
   certified?: boolean;
+  mainDeveloper?: string;
+  mainDeveloperBadge?: React.ReactNode;
+  contributors?: string;
+  contributorBadge?: React.ReactNode; // the Badge will be appended once at the very end
 }
 
 const style = {
@@ -43,9 +45,11 @@ function ModuleCard({
   moduleLink,
   coverImg,
   info,
-  moduleCreator,
-  creatorBadge,
   certified,
+  mainDeveloper,
+  mainDeveloperBadge,
+  contributors,
+  contributorBadge,
 }: Props) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -91,16 +95,28 @@ function ModuleCard({
     );
   }
 
-  let moduleCreatorElement = undefined;
-  if (moduleCreator != undefined) {
-    moduleCreatorElement = (
+  let mainDeveloperElement = undefined;
+  let contributorsElement = undefined;
+  if (mainDeveloper != undefined) {
+    if (contributors != undefined) {
+      contributorsElement = (
+        <div className="unselectable">
+          Contributor(s):
+          <p className="credited-name">{contributors}</p>
+          {contributorBadge}
+        </div>
+      );
+    }
+
+    mainDeveloperElement = (
       <>
         <hr />
         <div className="unselectable">
-          Creator:
-          <p className="creator-name">{moduleCreator}</p>
-          {creatorBadge}
+          Main Developer:
+          <p className="credited-name">{mainDeveloper}</p>
+          {mainDeveloperBadge}
         </div>
+        {contributorsElement}
       </>
     );
   }
@@ -142,7 +158,7 @@ function ModuleCard({
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <span className="unselectable">{info}</span>
-            {moduleCreatorElement}
+            {mainDeveloperElement}
           </Typography>
         </Box>
       </Modal>

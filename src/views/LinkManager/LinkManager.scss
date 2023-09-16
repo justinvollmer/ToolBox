@@ -1,0 +1,6 @@
+@import '../../utils/default';
+
+.unselectable {
+    cursor: default;
+    @include vendorPrefix(user-select, none);
+}
