@@ -5,6 +5,9 @@ import path from "path";
 /**
  * Downloads a file from a given URL, determines its file type, and saves it to a specified location.
  *
+ * @author Justin Vollmer
+ * @justinvollmer
+ *
  * @param {string} url - The URL of the file to download.
  * @param {string} fileName - The desired name of the downloaded file without an extension.
  * @param {string} [outputFolder] - The folder where the downloaded file should be saved.
@@ -58,6 +61,16 @@ async function download(
   }
 }
 
+/**
+ * Downloads files from a list of URLs and saves them to a specified output folder.
+ *
+ * @author Justin Vollmer
+ * @justinvollmer
+ *
+ * @param {Array} urlList - An array of objects containing URL and filename information.
+ * @param {string} outputFolder - The path to the output folder where the files will be saved.
+ * @returns {Promise<void>} - A Promise that resolves when all downloads are complete.
+ */
 async function downloadFromList(
   urlList: { url: string; filename: string }[],
   outputFolder: string
@@ -68,6 +81,7 @@ async function downloadFromList(
       fs.mkdirSync(outputFolder, { recursive: true });
     }
 
+    // Loop through the list of URLs and filenames
     for (let i = 0; i < urlList.length; i++) {
       const { url, filename } = urlList[i];
       await download(url, `${filename} (${i + 1})`, outputFolder);
