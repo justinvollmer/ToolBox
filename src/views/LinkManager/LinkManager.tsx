@@ -61,6 +61,7 @@ function LinkManagerMenu() {
           </Box>
         </Paper>
       )}
+      {!isVisible && <h1 onClick={toggleVisibility}>Test</h1>}
     </Container>
   );
 }
