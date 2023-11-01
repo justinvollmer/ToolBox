@@ -65,12 +65,32 @@ function EventCalendarCard() {
   );
 }
 
+function GalleryCard() {
+  const title = "Gallery";
+  const description = "WORK IN PROGRESS! Name may not be final!";
+  const moduleLink = "/gallery";
+  const info = "WORK IN PROGRESS! Name may not be final!";
+
+  return (
+    <ModuleCard
+      title={title}
+      description={description}
+      moduleLink={moduleLink}
+      info={info}
+      certified={true}
+      mainDeveloper="Justin Vollmer"
+      mainDeveloperBadge={<AppCreator />}
+    />
+  );
+}
+
 function Home() {
   return (
     <div className="main-container">
       <LinkManagerCard />
       <WatchlistCard />
       <EventCalendarCard />
+      <GalleryCard />
     </div>
   );
 }
