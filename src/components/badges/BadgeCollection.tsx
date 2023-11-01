@@ -22,7 +22,7 @@ function AppCreator() {
 }
 
 function CertifiedModule() {
-  const title: string = "Official Module";
+  const title: string = "Certified Module";
 
   const description: string =
     "This module has been officially made by the App Creator.";
