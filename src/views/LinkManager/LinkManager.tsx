@@ -8,6 +8,7 @@ import {
   Modal,
 } from "@mui/material";
 import { Link } from "react-router-dom";
+import Editor from "../../components/editor/Editor";
 
 import "./LinkManager.scss";
 
@@ -88,7 +89,15 @@ function LinkManagerMenu() {
 }
 
 function LinkManager() {
-  return <LinkManagerMenu />;
+  return (
+    <>
+      <br />
+      <LinkManagerMenu />
+      <Container>
+        <Editor />
+      </Container>
+    </>
+  );
 }
 
 export default LinkManager;
