@@ -25,7 +25,7 @@ function CertifiedModule() {
   const title: string = "Certified Module";
 
   const description: string =
-    "This module has been officially made by the App Creator.";
+    "This module has officially been made by the App Creator.";
 
   return (
     <Badge
