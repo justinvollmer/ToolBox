@@ -92,7 +92,7 @@ function LinkManager() {
   return (
     <div
       style={{
-        margin: "50px",
+        margin: "25px",
       }}
     >
       <LinkManagerMenu />
