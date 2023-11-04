@@ -54,7 +54,7 @@ function LinkManagerMenu() {
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
     >
-      <Container maxWidth="sm" sx={styles.container}>
+      <Container maxWidth="xl" sx={styles.container}>
         <Paper elevation={3} sx={{ padding: "16px", textAlign: "center" }}>
           <Typography className="unselectable" variant="h4" sx={styles.header}>
             Link-Manager
@@ -90,13 +90,14 @@ function LinkManagerMenu() {
 
 function LinkManager() {
   return (
-    <>
-      <br />
+    <div
+      style={{
+        margin: "50px",
+      }}
+    >
       <LinkManagerMenu />
-      <Container>
-        <Editor />
-      </Container>
-    </>
+      <Editor />
+    </div>
   );
 }
 
