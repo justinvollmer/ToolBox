@@ -6,15 +6,26 @@ import {
   SpeedDialAction,
   TextField,
 } from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
-import LockIcon from "@mui/icons-material/Lock";
-import ClearAllIcon from "@mui/icons-material/ClearAll";
-import DownloadIcon from "@mui/icons-material/Download";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import EditIcon from "@mui/icons-material/Edit";
+import {
+  SaveRounded,
+  SaveAsRounded,
+  LockRounded,
+  DeleteRounded,
+  DownloadRounded,
+  FileUploadRounded,
+  RestartAltRounded,
+  VisibilityRounded,
+  EditRounded,
+} from "@mui/icons-material/";
 
 function Editor() {
+  const defaultValue =
+    "https://example.com/\nhttps://example.com/\nhttps://example.com/";
+  const [text, setText] = React.useState(defaultValue);
+  const handleTextChange = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => setText(event.target.value);
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -25,29 +36,38 @@ function Editor() {
 
   const readOnlyActions = [
     {
-      icon: <EditIcon />,
+      icon: <EditRounded />,
       name: "Edit",
       function: () => {
         handleEditMode();
         handleClose();
       },
     },
-    { icon: <SaveIcon />, name: "Save" },
-    { icon: <LockIcon />, name: "Encryption" },
-    { icon: <DownloadIcon />, name: "Download Manager" },
+    { icon: <FileUploadRounded />, name: "Import" },
+    { icon: <SaveRounded />, name: "Export" },
+    { icon: <LockRounded />, name: "Encryption" },
+    { icon: <DownloadRounded />, name: "Download Manager" },
   ];
 
   const editActions = [
     {
-      icon: <VisibilityIcon />,
-      name: "Ready Only",
+      icon: <SaveAsRounded />,
+      name: "Save",
       function: () => {
         handleReadOnlyMode();
         handleClose();
       },
     },
-    { icon: <RestartAltIcon />, name: "Reset" },
-    { icon: <ClearAllIcon />, name: "Clear" },
+    {
+      icon: <RestartAltRounded />,
+      name: "Reset",
+      function: () => setText(defaultValue),
+    },
+    {
+      icon: <DeleteRounded />,
+      name: "Clear",
+      function: () => setText(""),
+    },
   ];
 
   return (
@@ -56,22 +76,26 @@ function Editor() {
         label="List Content"
         multiline
         rows={30}
-        defaultValue="https://example.com/"
         placeholder="One URL per row"
         variant="filled"
         fullWidth
-        disabled={!editMode}
+        InputProps={{
+          readOnly: !editMode,
+        }}
+        value={text}
+        onChange={handleTextChange}
       />
       <Backdrop open={open} />
       {!editMode && (
         <SpeedDial
           ariaLabel="SpeedDial tooltip example"
           sx={{ position: "absolute", bottom: 16, right: 16 }}
-          icon={<VisibilityIcon />}
+          icon={<VisibilityRounded />}
           onClose={handleClose}
           onOpen={handleOpen}
           open={open}
           hidden={editMode}
+          FabProps={{ color: "success" }}
         >
           {readOnlyActions.map((action) => (
             <SpeedDialAction
@@ -88,7 +112,7 @@ function Editor() {
         <SpeedDial
           ariaLabel="SpeedDial tooltip example"
           sx={{ position: "absolute", bottom: 16, right: 16 }}
-          icon={<EditIcon />}
+          icon={<EditRounded />}
           onClose={handleClose}
           onOpen={handleOpen}
           open={open}
