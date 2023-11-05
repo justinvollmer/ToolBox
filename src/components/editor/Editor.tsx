@@ -9,6 +9,7 @@ import {
 import {
   SaveRounded,
   SaveAsRounded,
+  ClearRounded,
   LockRounded,
   DeleteRounded,
   DownloadRounded,
@@ -21,7 +22,10 @@ import {
 function Editor() {
   const defaultValue =
     "https://example.com/\nhttps://example.com/\nhttps://example.com/";
+
   const [text, setText] = React.useState(defaultValue);
+  const [textPriorChange, setTextPriorChange] = React.useState(defaultValue);
+
   const handleTextChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => setText(event.target.value);
@@ -31,8 +35,13 @@ function Editor() {
   const handleClose = () => setOpen(false);
 
   const [editMode, activateEdit] = React.useState(false);
-  const handleEditMode = () => activateEdit(true);
-  const handleReadOnlyMode = () => activateEdit(false);
+  const handleEditMode = () => {
+    setTextPriorChange(text);
+    activateEdit(true);
+  };
+  const handleReadOnlyMode = () => {
+    activateEdit(false);
+  };
 
   const readOnlyActions = [
     {
@@ -54,6 +63,15 @@ function Editor() {
       icon: <SaveAsRounded />,
       name: "Save",
       function: () => {
+        handleReadOnlyMode();
+        handleClose();
+      },
+    },
+    {
+      icon: <ClearRounded />,
+      name: "Cancel",
+      function: () => {
+        setText(textPriorChange);
         handleReadOnlyMode();
         handleClose();
       },
