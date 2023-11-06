@@ -89,20 +89,35 @@ function Editor() {
   ];
 
   return (
-    <Box sx={{ height: "100%", transform: "translateZ(0px)", flexGrow: 1 }}>
-      <TextField
-        label="List Content"
-        multiline
-        rows={30}
-        placeholder="One URL per row"
-        variant="filled"
-        fullWidth
-        InputProps={{
-          readOnly: !editMode,
+    <Box
+      sx={{
+        height: "calc(100vh - 114px)",
+        transform: "translateZ(0px)",
+        flexGrow: 1,
+      }}
+    >
+      <div
+        style={{
+          maxHeight: "100%",
+          height: "100%",
+          overflowY: "auto",
+          overflowX: "hidden",
         }}
-        value={text}
-        onChange={handleTextChange}
-      />
+      >
+        <TextField
+          label="List Content"
+          multiline
+          minRows={26}
+          placeholder="One URL per row"
+          variant="filled"
+          fullWidth
+          InputProps={{
+            readOnly: !editMode,
+          }}
+          value={text}
+          onChange={handleTextChange}
+        />
+      </div>
       <Backdrop open={open} />
       {!editMode && (
         <SpeedDial
