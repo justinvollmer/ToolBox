@@ -17,6 +17,7 @@ import {
   RestartAltRounded,
   VisibilityRounded,
   EditRounded,
+  FilterListRounded,
 } from "@mui/icons-material/";
 
 function Editor() {
@@ -85,6 +86,13 @@ function Editor() {
       icon: <DeleteRounded />,
       name: "Clear",
       function: () => setText(""),
+    },
+    {
+      icon: <FilterListRounded />,
+      name: "Filter",
+      function: () => {
+        /* TODO: Implement filter function */
+      },
     },
   ];
 
