@@ -1,5 +1,5 @@
 /* eslint-disable */
-const { app, BrowserWindow } = require("electron");
+const { app, BrowserWindow, Menu } = require("electron");
 
 // modify your existing createWindow() function
 const createWindow = () => {
@@ -11,8 +11,15 @@ const createWindow = () => {
     },
   });
 
+  // TODO: Add custom Application Menu
+  const applicaitonMenuItems = [{ role: "fileMenu" }, { role: "viewMenu" }];
+  const applicationMenu = Menu.buildFromTemplate(applicaitonMenuItems);
+  Menu.setApplicationMenu(applicationMenu);
+
   win.loadURL("http://localhost:5173/");
-  win.webContents.openDevTools();
+
+  // Always enable DevTools on startup
+  //win.webContents.openDevTools();
 };
 
 app.whenReady().then(createWindow);
