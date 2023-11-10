@@ -6,72 +6,137 @@ import {
   SpeedDialAction,
   TextField,
 } from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
-import LockIcon from "@mui/icons-material/Lock";
-import ClearAllIcon from "@mui/icons-material/ClearAll";
-import DownloadIcon from "@mui/icons-material/Download";
-import RestartAltIcon from "@mui/icons-material/RestartAlt";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import EditIcon from "@mui/icons-material/Edit";
+import {
+  SaveRounded,
+  SaveAsRounded,
+  ClearRounded,
+  LockRounded,
+  DeleteRounded,
+  DownloadRounded,
+  FileUploadRounded,
+  RestartAltRounded,
+  VisibilityRounded,
+  EditRounded,
+  FilterListRounded,
+} from "@mui/icons-material/";
 
 function Editor() {
+  const defaultValue =
+    "https://example.com/\nhttps://example.com/\nhttps://example.com/";
+
+  const [text, setText] = React.useState(defaultValue);
+  const [textPriorChange, setTextPriorChange] = React.useState(defaultValue);
+
+  const handleTextChange = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => setText(event.target.value);
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   const [editMode, activateEdit] = React.useState(false);
-  const handleEditMode = () => activateEdit(true);
-  const handleReadOnlyMode = () => activateEdit(false);
+  const handleEditMode = () => {
+    setTextPriorChange(text);
+    activateEdit(true);
+  };
+  const handleReadOnlyMode = () => {
+    activateEdit(false);
+  };
 
   const readOnlyActions = [
     {
-      icon: <EditIcon />,
+      icon: <EditRounded />,
       name: "Edit",
       function: () => {
         handleEditMode();
         handleClose();
       },
     },
-    { icon: <SaveIcon />, name: "Save" },
-    { icon: <LockIcon />, name: "Encryption" },
-    { icon: <DownloadIcon />, name: "Download Manager" },
+    { icon: <FileUploadRounded />, name: "Import" },
+    { icon: <SaveRounded />, name: "Export" },
+    { icon: <LockRounded />, name: "Encryption" },
+    { icon: <DownloadRounded />, name: "Download Manager" },
   ];
 
   const editActions = [
     {
-      icon: <VisibilityIcon />,
-      name: "Ready Only",
+      icon: <SaveAsRounded />,
+      name: "Save",
       function: () => {
         handleReadOnlyMode();
         handleClose();
       },
     },
-    { icon: <RestartAltIcon />, name: "Reset" },
-    { icon: <ClearAllIcon />, name: "Clear" },
+    {
+      icon: <ClearRounded />,
+      name: "Cancel",
+      function: () => {
+        setText(textPriorChange);
+        handleReadOnlyMode();
+        handleClose();
+      },
+    },
+    {
+      icon: <RestartAltRounded />,
+      name: "Reset",
+      function: () => setText(defaultValue),
+    },
+    {
+      icon: <DeleteRounded />,
+      name: "Clear",
+      function: () => setText(""),
+    },
+    {
+      icon: <FilterListRounded />,
+      name: "Filter",
+      function: () => {
+        /* TODO: Implement filter function */
+      },
+    },
   ];
 
   return (
-    <Box sx={{ height: "100%", transform: "translateZ(0px)", flexGrow: 1 }}>
-      <TextField
-        label="List Content"
-        multiline
-        rows={30}
-        defaultValue="https://example.com/"
-        placeholder="One URL per row"
-        variant="filled"
-        fullWidth
-        disabled={!editMode}
-      />
+    <Box
+      sx={{
+        height: "calc(100vh - 114px)",
+        transform: "translateZ(0px)",
+        flexGrow: 1,
+      }}
+    >
+      <div
+        style={{
+          maxHeight: "100%",
+          height: "100%",
+          overflowY: "auto",
+          overflowX: "hidden",
+        }}
+      >
+        <TextField
+          label="List Content"
+          multiline
+          minRows={26}
+          placeholder="One URL per row"
+          variant="filled"
+          fullWidth
+          InputProps={{
+            readOnly: !editMode,
+          }}
+          value={text}
+          onChange={handleTextChange}
+        />
+      </div>
       <Backdrop open={open} />
       {!editMode && (
         <SpeedDial
           ariaLabel="SpeedDial tooltip example"
           sx={{ position: "absolute", bottom: 16, right: 16 }}
-          icon={<VisibilityIcon />}
+          icon={<VisibilityRounded />}
           onClose={handleClose}
           onOpen={handleOpen}
           open={open}
           hidden={editMode}
+          FabProps={{ color: "success" }}
         >
           {readOnlyActions.map((action) => (
             <SpeedDialAction
@@ -88,7 +153,7 @@ function Editor() {
         <SpeedDial
           ariaLabel="SpeedDial tooltip example"
           sx={{ position: "absolute", bottom: 16, right: 16 }}
-          icon={<EditIcon />}
+          icon={<EditRounded />}
           onClose={handleClose}
           onOpen={handleOpen}
           open={open}
