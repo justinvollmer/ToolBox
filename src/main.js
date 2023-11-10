@@ -11,14 +11,13 @@ const createWindow = () => {
     },
   });
 
-  // TODO: Add custom Application Menu
   const applicaitonMenuItems = [{ role: "fileMenu" }, { role: "viewMenu" }];
   const applicationMenu = Menu.buildFromTemplate(applicaitonMenuItems);
   Menu.setApplicationMenu(applicationMenu);
 
   win.loadURL("http://localhost:5173/");
 
-  // Always enable DevTools on startup
+  // NOTE: Always enable DevTools on startup
   //win.webContents.openDevTools();
 };
 
