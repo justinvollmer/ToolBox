@@ -33,7 +33,7 @@ import {
   AutoAwesomeMotionRounded,
 } from "@mui/icons-material/";
 
-import { blue, green } from "@mui/material/colors";
+import { blue, green, red } from "@mui/material/colors";
 
 import "./LinkManager.scss";
 
@@ -121,7 +121,7 @@ function FilterDialog({ open, selectedValue, onClose }: FilterDialogProps) {
             onClick={() => handleListItemClick("cancel")}
           >
             <ListItemAvatar>
-              <Avatar>
+              <Avatar sx={{ bgcolor: red[100], color: red[600] }}>
                 <ClearRounded />
               </Avatar>
             </ListItemAvatar>
