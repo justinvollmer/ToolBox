@@ -35,13 +35,6 @@ import {
 
 import { blue, green, red } from "@mui/material/colors";
 
-import {
-  splitText,
-  removeEmptyLines,
-  removeComments,
-  removeDuplicateLines,
-} from "../../utils/Filter";
-
 import "./LinkManager.scss";
 
 interface FilterDialogProps {
@@ -64,18 +57,18 @@ function FilterDialog({
   };
 
   const handleListItemClick = (value: string) => {
-    let splittedText: string[] = splitText(text);
+    let splittedText: string[] = text.split("\n").map((e) => e.trim());
 
     if (value == "emptyLines" || value == "applyAll") {
-      splittedText = removeEmptyLines(splittedText);
+      splittedText = splittedText.filter((e) => e !== "");
     }
 
     if (value == "comments" || value == "applyAll") {
-      splittedText = removeComments(splittedText);
+      splittedText = splittedText.filter((e) => !e.startsWith("//"));
     }
 
     if (value == "dulicateLines" || value == "applyAll") {
-      splittedText = removeDuplicateLines(splittedText);
+      splittedText = Array.from(new Set(splittedText));
     }
 
     setText(splittedText.join("\n"));
