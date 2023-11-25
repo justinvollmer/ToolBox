@@ -1,18 +1,17 @@
-import _ from "lodash";
-
-function splitLines(text: string): string[] {
-  const splittedText: string[] = text.split("\n");
-  return splittedText;
+function splitText(text: string): string[] {
+  return text.split("\n").map((e) => e.trim());
 }
 
-function removeEmptyLines(text: string | string[]): string {
-  if (typeof text == "string") {
-    console.log("ist String");
-  } else if (Array.isArray(text)) {
-    console.log("ist String[]");
-  }
-
-  return "nichts";
+function removeEmptyLines(splittedLines: string[]): string[] {
+  return splittedLines.filter((e) => e !== "");
 }
 
-export { splitLines, removeEmptyLines };
+function removeComments(splittedLines: string[]): string[] {
+  return splittedLines.filter((e) => !e.startsWith("//"));
+}
+
+function removeDuplicateLines(splittedLines: string[]): string[] {
+  return Array.from(new Set(splittedLines));
+}
+
+export { splitText, removeEmptyLines, removeComments, removeDuplicateLines };

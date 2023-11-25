@@ -35,20 +35,51 @@ import {
 
 import { blue, green, red } from "@mui/material/colors";
 
+import {
+  splitText,
+  removeEmptyLines,
+  removeComments,
+  removeDuplicateLines,
+} from "../../utils/Filter";
+
 import "./LinkManager.scss";
 
 interface FilterDialogProps {
+  text: string;
+  setText: (value: string) => void;
   open: boolean;
   selectedValue: string;
   onClose: (value: string) => void;
 }
 
-function FilterDialog({ open, selectedValue, onClose }: FilterDialogProps) {
+function FilterDialog({
+  text,
+  setText,
+  open,
+  selectedValue,
+  onClose,
+}: FilterDialogProps) {
   const handleClose = () => {
     onClose(selectedValue);
   };
 
   const handleListItemClick = (value: string) => {
+    let splittedText: string[] = splitText(text);
+
+    if (value == "emptyLines" || value == "applyAll") {
+      splittedText = removeEmptyLines(splittedText);
+    }
+
+    if (value == "comments" || value == "applyAll") {
+      splittedText = removeComments(splittedText);
+    }
+
+    if (value == "dulicateLines" || value == "applyAll") {
+      splittedText = removeDuplicateLines(splittedText);
+    }
+
+    setText(splittedText.join("\n"));
+
     onClose(value);
   };
 
@@ -97,7 +128,10 @@ function FilterDialog({ open, selectedValue, onClose }: FilterDialogProps) {
                 <DifferenceRounded />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="Remove all duplicate lines" />
+            <ListItemText
+              primary="Remove all duplicate lines"
+              secondary="Includes empty lines / spaces"
+            />
           </ListItemButton>
         </ListItem>
 
@@ -230,6 +264,8 @@ function LinkManager() {
       }}
     >
       <FilterDialog
+        text={text}
+        setText={setText}
         selectedValue={selectedFilter}
         open={openFilterDialog}
         onClose={handleCloseFilter}
