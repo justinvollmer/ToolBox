@@ -33,22 +33,46 @@ import {
   AutoAwesomeMotionRounded,
 } from "@mui/icons-material/";
 
-import { blue, green } from "@mui/material/colors";
+import { blue, green, red } from "@mui/material/colors";
 
 import "./LinkManager.scss";
 
 interface FilterDialogProps {
+  text: string;
+  setText: (value: string) => void;
   open: boolean;
   selectedValue: string;
   onClose: (value: string) => void;
 }
 
-function FilterDialog({ open, selectedValue, onClose }: FilterDialogProps) {
+function FilterDialog({
+  text,
+  setText,
+  open,
+  selectedValue,
+  onClose,
+}: FilterDialogProps) {
   const handleClose = () => {
     onClose(selectedValue);
   };
 
   const handleListItemClick = (value: string) => {
+    let splittedText: string[] = text.split("\n").map((e) => e.trim());
+
+    if (value == "emptyLines" || value == "applyAll") {
+      splittedText = splittedText.filter((e) => e !== "");
+    }
+
+    if (value == "comments" || value == "applyAll") {
+      splittedText = splittedText.filter((e) => !e.startsWith("//"));
+    }
+
+    if (value == "dulicateLines" || value == "applyAll") {
+      splittedText = Array.from(new Set(splittedText));
+    }
+
+    setText(splittedText.join("\n"));
+
     onClose(value);
   };
 
@@ -97,7 +121,10 @@ function FilterDialog({ open, selectedValue, onClose }: FilterDialogProps) {
                 <DifferenceRounded />
               </Avatar>
             </ListItemAvatar>
-            <ListItemText primary="Remove all duplicate lines" />
+            <ListItemText
+              primary="Remove all duplicate lines"
+              secondary="Includes empty lines / spaces"
+            />
           </ListItemButton>
         </ListItem>
 
@@ -121,7 +148,7 @@ function FilterDialog({ open, selectedValue, onClose }: FilterDialogProps) {
             onClick={() => handleListItemClick("cancel")}
           >
             <ListItemAvatar>
-              <Avatar>
+              <Avatar sx={{ bgcolor: red[100], color: red[600] }}>
                 <ClearRounded />
               </Avatar>
             </ListItemAvatar>
@@ -230,6 +257,8 @@ function LinkManager() {
       }}
     >
       <FilterDialog
+        text={text}
+        setText={setText}
         selectedValue={selectedFilter}
         open={openFilterDialog}
         onClose={handleCloseFilter}
