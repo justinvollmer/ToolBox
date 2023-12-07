@@ -205,7 +205,7 @@ function LinkManager() {
     try {
       const fileInput = document.createElement("input");
       fileInput.type = "file";
-      fileInput.accept = ".txt";
+      fileInput.accept = ".txt, .json";
 
       fileInput.addEventListener("change", async (event) => {
         const file = (event.target as HTMLInputElement)?.files?.[0];
