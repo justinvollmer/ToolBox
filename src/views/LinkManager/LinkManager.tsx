@@ -205,7 +205,7 @@ function LinkManager() {
     try {
       const fileInput = document.createElement("input");
       fileInput.type = "file";
-      fileInput.accept = ".txt, .json";
+      fileInput.accept = ".txt";
 
       fileInput.addEventListener("change", async (event) => {
         const file = (event.target as HTMLInputElement)?.files?.[0];
@@ -242,6 +242,16 @@ function LinkManager() {
   };
   // !SECTION
 
+  // SECTION - File Export
+  const exportFile = () => {
+    const blob = new Blob([text], { type: "text/plain" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "file.txt";
+    link.click();
+  };
+  // !SECTION
+
   // SECTION - Speed Dial Buttons
   const readOnlyActions = [
     {
@@ -259,7 +269,13 @@ function LinkManager() {
         openFileDialog();
       },
     },
-    { icon: <SaveRounded />, name: "Export" },
+    {
+      icon: <SaveRounded />,
+      name: "Export",
+      function: () => {
+        exportFile();
+      },
+    },
     { icon: <LockRounded />, name: "Encryption" },
     { icon: <DownloadRounded />, name: "Download Manager" },
   ];
