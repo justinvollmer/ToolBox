@@ -161,6 +161,7 @@ function FilterDialog({
 }
 
 function LinkManager() {
+  // SECTION - Textfield
   const defaultValue =
     "https://example.com/\nhttps://example.com/\nhttps://example.com/";
 
@@ -174,7 +175,9 @@ function LinkManager() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  // !SECTION
 
+  // SECTION - Editor Modes
   const [editMode, activateEdit] = React.useState(false);
   const handleEditMode = () => {
     setTextPriorChange(text);
@@ -183,7 +186,9 @@ function LinkManager() {
   const handleReadOnlyMode = () => {
     activateEdit(false);
   };
+  // !SECTION
 
+  // SECTION - Filters
   const [openFilterDialog, setOpenFilterDialog] = React.useState(false);
   const [selectedFilter, setSelectedFilter] = React.useState("none");
 
@@ -193,7 +198,53 @@ function LinkManager() {
     setOpenFilterDialog(false);
     setSelectedFilter(value);
   };
+  // !SECTION
 
+  // SECTION - File Import
+  const [fileContent, setFileContent] = React.useState("");
+
+  const openFileDialog = async () => {
+    try {
+      const fileInput = document.createElement("input");
+      fileInput.type = "file";
+      fileInput.accept = ".txt";
+
+      fileInput.addEventListener("change", async (event) => {
+        const file = (event.target as HTMLInputElement)?.files?.[0];
+
+        if (file) {
+          try {
+            const content = await readFileAsync(file);
+            setFileContent(content);
+          } catch (error) {
+            console.error("Error reading file:", error);
+          }
+        }
+      });
+
+      fileInput.click();
+    } catch (error) {
+      console.error("Error opening file dialog:", error);
+    }
+  };
+
+  const readFileAsync = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (reader.result instanceof ArrayBuffer) {
+          reject(new Error("Failed to read file as text."));
+        } else {
+          resolve(reader.result as string);
+        }
+      };
+      reader.onerror = (error) => reject(error);
+      reader.readAsText(file);
+    });
+  };
+  // !SECTION
+
+  // SECTION - Speed Dial Buttons
   const readOnlyActions = [
     {
       icon: <EditRounded />,
@@ -203,7 +254,17 @@ function LinkManager() {
         handleClose();
       },
     },
-    { icon: <FileUploadRounded />, name: "Import" },
+    {
+      icon: <FileUploadRounded />,
+      name: "Import",
+      function: async () => {
+        // FIXME - File Import
+        await openFileDialog();
+        const content = fileContent;
+        setText(content);
+        setFileContent("");
+      },
+    },
     { icon: <SaveRounded />, name: "Export" },
     { icon: <LockRounded />, name: "Encryption" },
     { icon: <DownloadRounded />, name: "Download Manager" },
@@ -249,6 +310,7 @@ function LinkManager() {
       },
     },
   ];
+  // !SECTION
 
   return (
     <div
