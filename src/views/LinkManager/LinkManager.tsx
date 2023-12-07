@@ -201,8 +201,6 @@ function LinkManager() {
   // !SECTION
 
   // SECTION - File Import
-  const [fileContent, setFileContent] = React.useState("");
-
   const openFileDialog = async () => {
     try {
       const fileInput = document.createElement("input");
@@ -215,7 +213,7 @@ function LinkManager() {
         if (file) {
           try {
             const content = await readFileAsync(file);
-            setFileContent(content);
+            setText(content);
           } catch (error) {
             console.error("Error reading file:", error);
           }
@@ -257,12 +255,8 @@ function LinkManager() {
     {
       icon: <FileUploadRounded />,
       name: "Import",
-      function: async () => {
-        // FIXME - File Import
-        await openFileDialog();
-        const content = fileContent;
-        setText(content);
-        setFileContent("");
+      function: () => {
+        openFileDialog();
       },
     },
     { icon: <SaveRounded />, name: "Export" },
