@@ -1,6 +1,6 @@
 import ModuleCard from "../../components/modulecards/ModuleCard";
 
-import { AppCreator } from "../../components/badges/BadgeCollection";
+import { LeadDeveloper } from "../../components/badges/BadgeCollection";
 
 import "./Home.scss";
 
@@ -19,7 +19,7 @@ function LinkManagerCard() {
       info={info}
       certified={true}
       mainDeveloper="Justin Vollmer"
-      mainDeveloperBadge={<AppCreator />}
+      mainDeveloperBadge={<LeadDeveloper />}
     />
   );
 }
@@ -39,7 +39,7 @@ function WatchlistCard() {
       info={info}
       certified={true}
       mainDeveloper="Justin Vollmer"
-      mainDeveloperBadge={<AppCreator />}
+      mainDeveloperBadge={<LeadDeveloper />}
     />
   );
 }
@@ -60,7 +60,7 @@ function EventCalendarCard() {
       info={info}
       certified={true}
       mainDeveloper="Justin Vollmer"
-      mainDeveloperBadge={<AppCreator />}
+      mainDeveloperBadge={<LeadDeveloper />}
     />
   );
 }
@@ -79,7 +79,7 @@ function GalleryCard() {
       info={info}
       certified={true}
       mainDeveloper="Justin Vollmer"
-      mainDeveloperBadge={<AppCreator />}
+      mainDeveloperBadge={<LeadDeveloper />}
     />
   );
 }

@@ -4,11 +4,11 @@ import {
   VerifiedUser as CertifiedIcon,
 } from "@mui/icons-material";
 
-function AppCreator() {
-  const title: string = "App Creator";
+function LeadDeveloper() {
+  const title: string = "Lead Developer";
 
   const description: string =
-    "This contributor is verified to be the main creator of ToolBox.";
+    "This contributor is verified to be the Lead Developer of ToolBox.";
 
   return (
     <Badge
@@ -16,7 +16,7 @@ function AppCreator() {
       description={description}
       icon={<VerifiedIcon />}
       iconColor="#1DA1F2"
-      learnMoreLink="https://github.com/justinvollmer"
+      learnMoreLink="/About"
     />
   );
 }
@@ -37,4 +37,4 @@ function CertifiedModule() {
   );
 }
 
-export { AppCreator, CertifiedModule };
+export { LeadDeveloper, CertifiedModule };
