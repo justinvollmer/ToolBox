@@ -20,7 +20,6 @@ import "./Navbar.scss";
 import { Link } from "react-router-dom";
 
 const pages = [
-  { name: "Overview", link: "/" },
   { name: "Modules", link: "/" },
   { name: "About", link: "/about" },
 ];

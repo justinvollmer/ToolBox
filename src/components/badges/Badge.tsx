@@ -12,6 +12,7 @@ interface Props {
   icon: React.ReactNode;
   iconColor?: string;
   learnMoreLink?: string;
+  learnMoreTarget?: string;
 }
 
 const style = {
@@ -27,7 +28,14 @@ const style = {
   p: 4,
 };
 
-function Badge({ title, description, icon, iconColor, learnMoreLink }: Props) {
+function Badge({
+  title,
+  description,
+  icon,
+  iconColor,
+  learnMoreLink,
+  learnMoreTarget,
+}: Props) {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -36,7 +44,7 @@ function Badge({ title, description, icon, iconColor, learnMoreLink }: Props) {
 
   if (learnMoreLink !== undefined) {
     learnMoreElement = (
-      <a className="links" target="_blank" href={learnMoreLink}>
+      <a className="links" target={learnMoreTarget} href={learnMoreLink}>
         Learn more
       </a>
     );

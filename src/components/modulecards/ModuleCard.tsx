@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Button, CardActionArea, CardActions } from "@mui/material";
 
-import { CertifiedModule } from "../badges/BadgeCollection";
+import { WorkInProgress } from "../badges/BadgeCollection";
 
 import { Link } from "react-router-dom";
 
@@ -19,7 +19,7 @@ interface Props {
   moduleLink: string;
   coverImg?: string;
   info?: string;
-  certified?: boolean;
+  released?: boolean;
   mainDeveloper?: string;
   mainDeveloperBadge?: React.ReactNode;
   contributors?: string;
@@ -45,7 +45,7 @@ function ModuleCard({
   moduleLink,
   coverImg,
   info,
-  certified,
+  released,
   mainDeveloper,
   mainDeveloperBadge,
   contributors,
@@ -121,9 +121,9 @@ function ModuleCard({
     );
   }
 
-  let certifiedBadge = undefined;
-  if (certified) {
-    certifiedBadge = CertifiedModule();
+  let assignedBadge = undefined;
+  if (!released) {
+    assignedBadge = WorkInProgress();
   }
 
   return (
@@ -152,7 +152,7 @@ function ModuleCard({
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <div>
               <span className="unselectable" style={{ fontWeight: "bold" }}>
-                {title} {certifiedBadge}
+                {title} {assignedBadge}
               </span>
             </div>
           </Typography>
