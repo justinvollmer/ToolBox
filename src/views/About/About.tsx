@@ -7,7 +7,7 @@ function About() {
   return (
     <div className="profile-container unselectable">
       <Avatar
-        src="/src/assets/avatar.png"
+        src="https://avatars.githubusercontent.com/u/89389760?v=4"
         alt="Profile Picture"
         className="avatar"
       />
