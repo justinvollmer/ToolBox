@@ -1,8 +1,8 @@
 # React + TypeScript + Vite
 
-Copyright Notice for used Icons:
+Copyright Notice for used Icons (that require a copyright notice):
 
-Icon Src | Author | License
+Icon Source | Author | License
 --- | --- | ---
 https://www.svgrepo.com/svg/372218/beta | vmware | MIT License
 
