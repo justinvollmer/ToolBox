@@ -17,6 +17,7 @@
     "@mui/icons-material": "^5.14.3",
     "@mui/material": "^5.14.16",
     "@mui/styles": "^5.14.16",
+    "@types/node": "^20.10.4",
     "is-electron": "^2.2.2",
     "lodash": "^4.17.21",
     "node-sass": "^9.0.0",
