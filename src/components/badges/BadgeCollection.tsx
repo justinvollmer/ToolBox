@@ -1,5 +1,5 @@
 import Badge from "./Badge";
-import { Verified as VerifiedIcon } from "@mui/icons-material";
+import { BuildCircle as WrenchIcon } from "@mui/icons-material";
 
 function LeadDeveloper() {
   const title: string = "Lead Developer";
@@ -11,7 +11,7 @@ function LeadDeveloper() {
     <Badge
       title={title}
       description={description}
-      icon={<VerifiedIcon fontSize="small" />}
+      icon={<WrenchIcon fontSize="small" />}
       iconColor="#1DA1F2"
       learnMoreLink="/About"
     />

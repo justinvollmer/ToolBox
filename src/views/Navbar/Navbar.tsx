@@ -19,7 +19,6 @@ import "./Navbar.scss";
 
 import { Link } from "react-router-dom";
 
-// FIXME: Delete Dev Page after testing
 const pages = [
   { name: "Modules", link: "/" },
   { name: "About", link: "/about" },
