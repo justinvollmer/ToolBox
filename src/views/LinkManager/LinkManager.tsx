@@ -160,6 +160,25 @@ function FilterDialog({
   );
 }
 
+interface EncryptionProps {
+  text: string;
+  setText: (value: string) => void;
+  open: boolean;
+  onClose: () => void;
+}
+
+function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
+  const handleClose = () => {
+    onClose();
+  };
+
+  return (
+    <Dialog onClose={handleClose} open={open}>
+      <DialogTitle>Encryption / Decryption</DialogTitle>
+    </Dialog>
+  );
+}
+
 function LinkManager() {
   // SECTION - Textfield
   const defaultValue =
@@ -197,6 +216,16 @@ function LinkManager() {
   const handleCloseFilter = (value: string) => {
     setOpenFilterDialog(false);
     setSelectedFilter(value);
+  };
+  // !SECTION
+
+  // SECTION - Encryption
+  const [openEncryptionDialog, setOpenEncryptionDialog] = React.useState(false);
+
+  const handleOpenEncryption = () => setOpenEncryptionDialog(true);
+
+  const handleCloseEncryption = () => {
+    setOpenEncryptionDialog(false);
   };
   // !SECTION
 
@@ -276,7 +305,13 @@ function LinkManager() {
         exportFile();
       },
     },
-    { icon: <LockRounded />, name: "Encryption" },
+    {
+      icon: <LockRounded />,
+      name: "Encryption",
+      function: () => {
+        handleOpenEncryption();
+      },
+    },
     { icon: <DownloadRounded />, name: "Download Manager" },
   ];
 
@@ -334,6 +369,12 @@ function LinkManager() {
         selectedValue={selectedFilter}
         open={openFilterDialog}
         onClose={handleCloseFilter}
+      />
+      <EncryptionDialog
+        text={text}
+        setText={setText}
+        open={openEncryptionDialog}
+        onClose={handleCloseEncryption}
       />
       <Box
         sx={{
