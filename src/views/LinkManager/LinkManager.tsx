@@ -8,11 +8,15 @@ import {
   TextField,
   Dialog,
   DialogTitle,
+  DialogContent,
+  Button,
+  Grid,
   List,
   ListItem,
   ListItemAvatar,
   ListItemButton,
   ListItemText,
+  Typography,
 } from "@mui/material";
 
 import {
@@ -173,8 +177,60 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
   };
 
   return (
-    <Dialog onClose={handleClose} open={open}>
+    <Dialog onClose={handleClose} open={open} maxWidth="lg" fullWidth>
       <DialogTitle>Encryption / Decryption</DialogTitle>
+      <DialogContent>
+        <Grid container spacing={2}>
+          <Grid item xs={12} sm={12} md={6}>
+            <Typography variant="button">Original Text</Typography>
+            <TextField
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={20}
+              value={text}
+              InputProps={{ readOnly: true }}
+              style={{ marginBottom: "16px" }}
+            />
+          </Grid>
+          <Grid item xs={12} sm={12} md={6}>
+            <Typography variant="button">Translated Text</Typography>
+            <TextField
+              variant="outlined"
+              fullWidth
+              multiline
+              rows={20}
+              InputProps={{ readOnly: true }}
+              style={{ marginBottom: "16px" }}
+            />
+          </Grid>
+        </Grid>
+        <Grid container spacing={2} justify="flex-end">
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ marginLeft: "8px" }}
+            >
+              Encrypt
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              variant="contained"
+              color="primary"
+              style={{ marginLeft: "8px" }}
+            >
+              Decrypt
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button variant="contained" style={{ marginLeft: "8px" }}>
+              Cancel
+            </Button>
+          </Grid>
+        </Grid>
+      </DialogContent>
     </Dialog>
   );
 }
