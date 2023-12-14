@@ -9,6 +9,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  DialogActions,
   Button,
   Grid,
   List,
@@ -190,7 +191,7 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
               rows={20}
               value={text}
               InputProps={{ readOnly: true }}
-              style={{ marginBottom: "16px" }}
+              sx={{ marginBottom: "16px" }}
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6}>
@@ -201,35 +202,29 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
               multiline
               rows={20}
               InputProps={{ readOnly: true }}
-              style={{ marginBottom: "16px" }}
+              sx={{ marginBottom: "16px" }}
             />
           </Grid>
         </Grid>
-        <Grid container spacing={2} justify="flex-end">
-          <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ marginLeft: "8px" }}
-            >
-              Encrypt
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button
-              variant="contained"
-              color="primary"
-              style={{ marginLeft: "8px" }}
-            >
-              Decrypt
-            </Button>
-          </Grid>
-          <Grid item>
-            <Button variant="contained" style={{ marginLeft: "8px" }}>
-              Cancel
-            </Button>
-          </Grid>
-        </Grid>
+        <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ marginLeft: "8px" }}
+          >
+            Encrypt
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ marginLeft: "8px" }}
+          >
+            Decrypt
+          </Button>
+          <Button variant="contained" style={{ marginLeft: "8px" }}>
+            Cancel
+          </Button>
+        </DialogActions>
       </DialogContent>
     </Dialog>
   );
