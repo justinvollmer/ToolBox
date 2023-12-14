@@ -81,9 +81,13 @@ function FilterDialog({
     onClose(value);
   };
 
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  };
+
   return (
-    <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>Select a filter</DialogTitle>
+    <Dialog onClose={handleClose} open={open} onClick={handleBackdropClick}>
+      <DialogTitle className="unselectable">Select a filter</DialogTitle>
       <List sx={{ pt: 0 }}>
         <ListItem disableGutters>
           <ListItemButton
@@ -177,13 +181,27 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
     onClose();
   };
 
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  };
+
   return (
-    <Dialog onClose={handleClose} open={open} maxWidth="lg" fullWidth>
-      <DialogTitle>Encryption / Decryption</DialogTitle>
+    <Dialog
+      onClose={handleClose}
+      open={open}
+      maxWidth="lg"
+      fullWidth
+      onClick={handleBackdropClick}
+    >
+      <DialogTitle className="unselectable">
+        Encryption / Decryption
+      </DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={12} md={6}>
-            <Typography variant="button">Original Text</Typography>
+            <Typography className="unselectable" variant="button">
+              Original Text
+            </Typography>
             <TextField
               variant="outlined"
               fullWidth
@@ -195,7 +213,9 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
             />
           </Grid>
           <Grid item xs={12} sm={12} md={6}>
-            <Typography variant="button">Translated Text</Typography>
+            <Typography className="unselectable" variant="button">
+              Translated Text
+            </Typography>
             <TextField
               variant="outlined"
               fullWidth
@@ -221,7 +241,19 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
           >
             Decrypt
           </Button>
-          <Button variant="contained" style={{ marginLeft: "8px" }}>
+          <Button
+            variant="contained"
+            color="success"
+            style={{ marginLeft: "8px" }}
+          >
+            Save Changes
+          </Button>
+          <Button
+            variant="contained"
+            color="inherit"
+            style={{ marginLeft: "8px" }}
+            onClick={handleClose}
+          >
             Cancel
           </Button>
         </DialogActions>
