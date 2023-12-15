@@ -40,6 +40,14 @@ import {
 
 import { blue, green, red } from "@mui/material/colors";
 
+import {
+  encrypt,
+  decrypt,
+  exportKeyToString,
+  importStringToKey,
+  generateCryptoKey,
+} from "../../utils/Encryption";
+
 import "./LinkManager.scss";
 
 interface FilterDialogProps {
@@ -177,12 +185,40 @@ interface EncryptionProps {
 }
 
 function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
+  const [translatedText, setTranslatedText] = React.useState("");
+  const [key, setKey] = React.useState("");
+
   const handleClose = () => {
     onClose();
+    setKey("");
+    setTranslatedText("");
   };
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
+  };
+
+  const handleKeyChange = (event: {
+    target: { value: React.SetStateAction<string> };
+  }) => setKey(event.target.value);
+
+  const handleApplyChanges = () => {
+    handleClose();
+    setText(translatedText);
+  };
+
+  const handleGenerateKey = async () => {
+    const newKey: CryptoKey = await generateCryptoKey();
+    const newKeyString: string = await exportKeyToString(newKey);
+    setKey(newKeyString);
+  };
+
+  const handleEncrypt = () => {
+    // TODO: handleEncrypt function
+  };
+
+  const handleDecrypt = () => {
+    // TODO: handleDecrypt function
   };
 
   return (
@@ -221,12 +257,34 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
               fullWidth
               multiline
               rows={20}
+              value={translatedText}
               InputProps={{ readOnly: true }}
+              sx={{ marginBottom: "16px" }}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <Typography className="unselectable" variant="button">
+              ENCRYPTION KEY
+            </Typography>
+            <TextField
+              variant="outlined"
+              fullWidth
+              value={key}
+              onChange={handleKeyChange}
+              placeholder="Leave empty to use default encryption key from the settings"
               sx={{ marginBottom: "16px" }}
             />
           </Grid>
         </Grid>
         <DialogActions sx={{ display: "flex", justifyContent: "center" }}>
+          <Button
+            variant="contained"
+            color="warning"
+            style={{ marginLeft: "8px" }}
+            onClick={handleGenerateKey}
+          >
+            Generate Encryption Key
+          </Button>
           <Button
             variant="contained"
             color="primary"
@@ -245,8 +303,9 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
             variant="contained"
             color="success"
             style={{ marginLeft: "8px" }}
+            onClick={handleApplyChanges}
           >
-            Save Changes
+            Apply Changes
           </Button>
           <Button
             variant="contained"

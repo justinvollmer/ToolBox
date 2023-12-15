@@ -121,4 +121,20 @@ async function importStringToKey(keyString: string): Promise<CryptoKey> {
   }
 }
 
-export { encrypt, decrypt, exportKeyToString, importStringToKey };
+async function generateCryptoKey(): Promise<CryptoKey> {
+  const key = await crypto.subtle.generateKey(
+    { name: "AES-GCM", length: 256 },
+    true,
+    ["encrypt", "decrypt"]
+  );
+
+  return key;
+}
+
+export {
+  encrypt,
+  decrypt,
+  exportKeyToString,
+  importStringToKey,
+  generateCryptoKey,
+};
