@@ -189,11 +189,13 @@ interface EncryptionProps {
 function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
   const [translatedText, setTranslatedText] = React.useState("");
   const [key, setKey] = React.useState("");
+  const [savingAbility, setSavingDisabled] = React.useState(true);
 
   const handleClose = () => {
     onClose();
     setKey("");
     setTranslatedText("");
+    setSavingDisabled(true);
   };
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -215,12 +217,28 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
     setKey(newKeyString);
   };
 
-  const handleEncrypt = () => {
-    // TODO: handleEncrypt function
+  const handleEncrypt = async () => {
+    const cryptoKey: CryptoKey = await importStringToKey(key);
+
+    const result: string = await encrypt(text, cryptoKey);
+
+    setTranslatedText(result);
+
+    if (savingAbility) {
+      setSavingDisabled(false);
+    }
   };
 
-  const handleDecrypt = () => {
-    // TODO: handleDecrypt function
+  const handleDecrypt = async () => {
+    const cryptoKey: CryptoKey = await importStringToKey(key);
+
+    const result: string = await decrypt(text, cryptoKey);
+
+    setTranslatedText(result);
+
+    if (savingAbility) {
+      setSavingDisabled(false);
+    }
   };
 
   return (
@@ -298,6 +316,7 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
             variant="contained"
             color="primary"
             style={{ marginLeft: "8px" }}
+            onClick={handleEncrypt}
           >
             Encrypt
           </Button>
@@ -305,6 +324,7 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
             variant="contained"
             color="primary"
             style={{ marginLeft: "8px" }}
+            onClick={handleDecrypt}
           >
             Decrypt
           </Button>
@@ -313,6 +333,7 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
             color="success"
             style={{ marginLeft: "8px" }}
             onClick={handleApplyChanges}
+            disabled={savingAbility}
           >
             Apply Changes
           </Button>
