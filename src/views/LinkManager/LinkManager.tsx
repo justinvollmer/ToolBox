@@ -18,13 +18,14 @@ import {
   ListItemButton,
   ListItemText,
   Typography,
+  InputAdornment,
 } from "@mui/material";
 
 import {
   SaveRounded,
   SaveAsRounded,
   ClearRounded,
-  LockRounded,
+  EnhancedEncryptionRounded,
   DeleteRounded,
   DownloadRounded,
   FileUploadRounded,
@@ -36,6 +37,7 @@ import {
   DifferenceRounded,
   CheckBoxOutlineBlankRounded,
   AutoAwesomeMotionRounded,
+  KeyRounded,
 } from "@mui/icons-material/";
 
 import { blue, green, red } from "@mui/material/colors";
@@ -273,6 +275,13 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
               onChange={handleKeyChange}
               placeholder="Leave empty to use default encryption key from the settings"
               sx={{ marginBottom: "16px" }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <KeyRounded />
+                  </InputAdornment>
+                ),
+              }}
             />
           </Grid>
         </Grid>
@@ -448,7 +457,7 @@ function LinkManager() {
       },
     },
     {
-      icon: <LockRounded />,
+      icon: <EnhancedEncryptionRounded />,
       name: "Encryption",
       function: () => {
         handleOpenEncryption();
