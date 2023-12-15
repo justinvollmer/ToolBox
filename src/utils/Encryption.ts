@@ -3,6 +3,9 @@
 /**
  * Encrypts the given text using the AES-GCM algorithm with the provided key.
  *
+ * @author Justin Vollmer
+ * @justinvollmer
+ *
  * @param {string} text - The unencrypted text to be encrypted.
  * @param {CryptoKey} key - The 256-bit encryption key for encrypting the text.
  * @returns {Promise<string>} A Promise resolving to the hexadecimal string representing the encrypted text.
@@ -38,6 +41,9 @@ async function encrypt(text: string, key: CryptoKey): Promise<string> {
 
 /**
  * Decrypts the given encrypted text using the AES-GCM algorithm with the provided key.
+ *
+ * @author Justin Vollmer
+ * @justinvollmer
  *
  * @param {string} encryptedText - The hexadecimal string representing the encrypted text.
  * @param {CryptoKey} key - The 256-bit encryption key for decrypting the text.
@@ -79,6 +85,9 @@ async function decrypt(encryptedText: string, key: CryptoKey): Promise<string> {
 /**
  * Converts a CryptoKey object to a hexadecimal string representation.
  *
+ * @author Justin Vollmer
+ * @justinvollmer
+ *
  * @param {CryptoKey} key - The CryptoKey object to be exported.
  * @returns {Promise<string>} A Promise resolving to the hexadecimal string representing the key.
  * @throws {Error} If an error occurs during key export.
@@ -97,6 +106,9 @@ async function exportKeyToString(key: CryptoKey): Promise<string> {
 
 /**
  * Converts a hexadecimal string representation of a key into a CryptoKey object.
+ *
+ * @author Justin Vollmer
+ * @justinvollmer
  *
  * @param {string} keyString - The hexadecimal string representing the key.
  * @returns {Promise<CryptoKey>} A Promise resolving to the CryptoKey object.
