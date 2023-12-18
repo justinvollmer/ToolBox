@@ -262,7 +262,7 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
               variant="outlined"
               fullWidth
               multiline
-              rows={20}
+              rows={15}
               value={text}
               InputProps={{ readOnly: true }}
               sx={{ marginBottom: "16px" }}
@@ -276,7 +276,7 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
               variant="outlined"
               fullWidth
               multiline
-              rows={20}
+              rows={15}
               value={translatedText}
               InputProps={{ readOnly: true }}
               sx={{ marginBottom: "16px" }}
