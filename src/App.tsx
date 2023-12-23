@@ -8,6 +8,7 @@ import About from "./views/About/About";
 import LinkManager from "./views/LinkManager/LinkManager";
 import Dev from "./views/Dev/Dev";
 import DevEncryption from "./views/Dev/DevEncryption";
+import DevDownload from "./views/Dev/DevDownload";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
           <Route path="dev">
             <Route index element={<Dev />} />
             <Route path="encryption" element={<DevEncryption />} />
+            <Route path="download" element={<DevDownload />} />
           </Route>
         </Route>
       </Routes>
