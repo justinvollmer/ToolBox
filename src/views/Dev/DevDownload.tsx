@@ -6,9 +6,7 @@ import { download, downloadFromList } from "../../utils/DownloadManager";
 function DevDownload() {
   const [url, setUrl] = React.useState("");
   const [filename, setFilename] = React.useState("");
-  const [downloadFolder, setDownloadFolder] = React.useState(
-    "C:\\Users\\email\\Desktop"
-  );
+  const [downloadFolder, setDownloadFolder] = React.useState("./downloads/");
   const [urlList, setUrlList] = React.useState<
     { url: string; filename: string }[]
   >([]);
