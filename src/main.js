@@ -1,10 +1,12 @@
 /* eslint-disable */
 const { app, BrowserWindow, Menu } = require("electron");
 const path = require("path");
+const url = require("url");
 
 // modify your existing createWindow() function
-const createWindow = () => {
+const createMainWindow = () => {
   const win = new BrowserWindow({
+    title: "ToolBox",
     width: 800,
     height: 600,
     webPreferences: {
@@ -24,7 +26,7 @@ const createWindow = () => {
   //win.webContents.openDevTools();
 };
 
-app.whenReady().then(createWindow);
+app.whenReady().then(createMainWindow);
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
@@ -32,6 +34,6 @@ app.on("window-all-closed", () => {
 });
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+    createMainWindow();
   }
 });
