@@ -6,9 +6,10 @@ const DevIPC = () => {
   const [message, setMessage] = React.useState("");
 
   const sendMessage = () => {
-    ipcRenderer.send("send-message", message);
-
-    setMessage("");
+    if (message != "") {
+      ipcRenderer.send("send-message", message);
+      setMessage("");
+    }
   };
 
   return (
