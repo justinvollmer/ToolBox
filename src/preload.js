@@ -1,8 +1,12 @@
 /* eslint-disable no-undef */
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { contextBridge } = require("electron");
-const os = require("os");
+const { contextBridge, ipcRenderer } = require("electron");
 
-contextBridge.exposeInMainWorld("electron", {
-  homedir: () => os.homedir(),
+contextBridge.exposeInMainWorld("ipcRenderer", {
+  send: (channel, data) => {
+    let validChannels = ["send-message"];
+    if (validChannels.includes(channel)) {
+      ipcRenderer.send(channel, data);
+    }
+  },
 });

@@ -1,5 +1,5 @@
 /* eslint-disable */
-const { app, BrowserWindow, Menu } = require("electron");
+const { app, BrowserWindow, Menu, ipcMain } = require("electron");
 const path = require("path");
 
 // modify your existing createWindow() function
@@ -35,4 +35,8 @@ app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
     createMainWindow();
   }
+});
+
+ipcMain.on("send-message", (event, message) => {
+  console.log("Message received:", message);
 });

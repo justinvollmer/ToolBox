@@ -25,6 +25,14 @@ function Dev() {
       >
         Download Test
       </Button>
+      <Button
+        variant="contained"
+        color="error"
+        component={Link}
+        to={"/dev/ipc"}
+      >
+        Download Test
+      </Button>
     </div>
   );
 }
