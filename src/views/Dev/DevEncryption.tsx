@@ -7,6 +7,7 @@ import {
   decrypt,
   importStringToKey,
   exportKeyToString,
+  generateCryptoKey,
 } from "../../utils/Encryption";
 
 function DevEncryption() {
@@ -48,11 +49,7 @@ function DevEncryption() {
   const handleGenerateKey = async () => {
     try {
       // Generate a random key
-      const key = await crypto.subtle.generateKey(
-        { name: "AES-GCM", length: 256 },
-        true,
-        ["encrypt", "decrypt"]
-      );
+      const key = await generateCryptoKey();
 
       // Export the key to a string
       const keyString = await exportKeyToString(key);

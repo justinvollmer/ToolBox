@@ -1,13 +1,17 @@
 /* eslint-disable */
-const { app, BrowserWindow, Menu } = require("electron");
+const { app, BrowserWindow, Menu, ipcMain } = require("electron");
+const path = require("path");
 
 // modify your existing createWindow() function
-const createWindow = () => {
+const createMainWindow = () => {
   const win = new BrowserWindow({
+    title: "ToolBox",
     width: 800,
     height: 600,
     webPreferences: {
       nodeIntegration: true,
+      contextIsolation: true,
+      preload: path.join(__dirname, "./preload.js"),
     },
   });
 
@@ -21,7 +25,7 @@ const createWindow = () => {
   //win.webContents.openDevTools();
 };
 
-app.whenReady().then(createWindow);
+app.whenReady().then(createMainWindow);
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") {
     app.quit();
@@ -29,6 +33,10 @@ app.on("window-all-closed", () => {
 });
 app.on("activate", () => {
   if (BrowserWindow.getAllWindows().length === 0) {
-    createWindow();
+    createMainWindow();
   }
+});
+
+ipcMain.on("send-message", (event, message) => {
+  console.log("Message received:", message);
 });
