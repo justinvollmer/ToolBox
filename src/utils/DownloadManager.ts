@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import fs from "fs";
 const { ipcRenderer } = window; // NOTE - Ignore this error message, it works
 
 async function download(
@@ -23,37 +22,29 @@ async function download(
   });
 }
 
-/**
- * Downloads files from a list of URLs and saves them to a specified output folder.
- *
- * @author Justin Vollmer
- * @justinvollmer
- *
- * @param {Array} urlList - An array of objects containing URL and filename information.
- * @param {string} outputFolder - The path to the output folder where the files will be saved.
- * @returns {Promise<void>} - A Promise that resolves when all downloads are complete.
- */
 async function downloadFromList(
   urlList: { url: string; filename: string }[],
-  outputFolder: string
+  outputFolder: string,
+  fileType?: string
 ): Promise<void> {
-  try {
-    // Create the output folder if it doesn't exist
-    if (!fs.existsSync(outputFolder)) {
-      fs.mkdirSync(outputFolder, { recursive: true });
-    }
+  return new Promise<void>((resolve, reject) => {
+    urlList.forEach((file, index) => {
+      ipcRenderer.send("download-file", {
+        url: file.url,
+        fileName: `${file.filename} (${index + 1})`,
+        outputFolder,
+        fileType,
+      });
+    });
 
-    // Loop through the list of URLs and filenames
-    for (let i = 0; i < urlList.length; i++) {
-      const { url, filename } = urlList[i];
-      await download(url, `${filename} (${i + 1})`, outputFolder);
-      console.log(`File ${filename} (${i + 1}) downloaded successfully.`);
-    }
-  } catch (error) {
-    console.error(
-      `Error: ${error instanceof Error ? error.message : "Unknown error"}`
-    );
-  }
+    ipcRenderer.once("download-file-list-success", () => {
+      resolve();
+    });
+
+    ipcRenderer.once("download-file-list-error", (message: any) => {
+      reject(new Error(message));
+    });
+  });
 }
 
 export { download, downloadFromList };

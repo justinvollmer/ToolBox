@@ -19,14 +19,6 @@ function Dev() {
       </Button>
       <Button
         variant="contained"
-        color="secondary"
-        component={Link}
-        to={"/dev/download"}
-      >
-        Download Test
-      </Button>
-      <Button
-        variant="contained"
         color="error"
         component={Link}
         to={"/dev/ipc"}

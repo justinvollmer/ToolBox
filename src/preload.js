@@ -4,9 +4,35 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("ipcRenderer", {
   send: (channel, data) => {
-    let validChannels = ["send-message", "download-file"];
-    if (validChannels.includes(channel)) {
+    let validSendChannels = [
+      "send-message",
+      "download-file",
+      "download-file-list",
+    ];
+    if (validSendChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
+    }
+  },
+  on: (channel, func) => {
+    let validReceiveChannels = [
+      "download-file-list-progress",
+      "download-file-list-success",
+      "download-file-list-error",
+    ];
+    if (validReceiveChannels.includes(channel)) {
+      // Remove existing listener if any, then add new one
+      ipcRenderer
+        .removeAllListeners(channel)
+        .on(channel, (event, ...args) => func(...args));
+    }
+  },
+  once: (channel, func) => {
+    let validReceiveChannels = [
+      "download-file-list-success",
+      "download-file-list-error",
+    ];
+    if (validReceiveChannels.includes(channel)) {
+      ipcRenderer.once(channel, (event, ...args) => func(...args));
     }
   },
 });
