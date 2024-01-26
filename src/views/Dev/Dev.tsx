@@ -31,7 +31,7 @@ function Dev() {
         component={Link}
         to={"/dev/ipc"}
       >
-        Download Test
+        IPC Test
       </Button>
     </div>
   );
