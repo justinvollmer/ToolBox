@@ -17,8 +17,15 @@ import {
   ListItemAvatar,
   ListItemButton,
   ListItemText,
-  Typography,
   InputAdornment,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  Paper,
 } from "@mui/material";
 
 import {
@@ -351,6 +358,112 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
   );
 }
 
+interface DownloadDialogProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+function DownloadDialog({ open, onClose }: DownloadDialogProps) {
+  const handleCheckLinks = () => {
+    console.log("Checking links...");
+  };
+
+  const handleStartDownload = () => {
+    console.log("Starting download...");
+  };
+
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  };
+
+  const downloads = [
+    {
+      id: 1,
+      link: "https://example.com/image.jpg",
+      filename: "image",
+      progress: "NOT READY",
+    },
+    {
+      id: 2,
+      link: "https://example.com/image.jpg",
+      filename: "pic",
+      progress: "NOT READY",
+    },
+  ];
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      onClick={handleBackdropClick}
+      maxWidth="md"
+      fullWidth
+    >
+      <DialogTitle>Download Manager</DialogTitle>
+      <DialogContent>
+        <Box sx={{ maxHeight: "60vh", overflow: "auto" }}>
+          {" "}
+          {/* Added for scrollable table */}
+          <TableContainer component={Paper}>
+            <Table stickyHeader>
+              {" "}
+              {/* Optional: stickyHeader for a fixed table header */}
+              <TableHead>
+                <TableRow>
+                  <TableCell>ID</TableCell>
+                  <TableCell>Link</TableCell>
+                  <TableCell>Filename</TableCell>
+                  <TableCell>Progress</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {downloads.map((download) => (
+                  <TableRow key={download.id}>
+                    <TableCell>{download.id}</TableCell>
+                    <TableCell>{download.link}</TableCell>
+                    <TableCell>
+                      <TextField
+                        size="small"
+                        value={download.filename}
+                        onChange={() => {}}
+                        // Implement the onChange handler
+                      />
+                    </TableCell>
+                    <TableCell>{download.progress}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+        <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+          <TextField
+            label="Interval (seconds/image)"
+            size="small"
+            sx={{ mr: 1 }}
+          />
+          <Button variant="outlined" onClick={handleCheckLinks}>
+            Check Links for compatibility
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={handleStartDownload}
+            sx={{ ml: 1 }}
+          >
+            Start Download
+          </Button>
+          <Button variant="outlined" onClick={onClose} sx={{ ml: 1 }}>
+            Cancel
+          </Button>
+        </Box>
+        <Typography variant="body2" sx={{ mt: 2 }}>
+          Please check the links first!
+        </Typography>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function LinkManager() {
   // SECTION - Textfield
   const defaultValue =
@@ -398,6 +511,18 @@ function LinkManager() {
 
   const handleCloseEncryption = () => {
     setOpenEncryptionDialog(false);
+  };
+  // !SECTION
+
+  // SECTION - DownloadManager
+  const [isDownloadManagerOpen, setOpenDownloadDialog] = React.useState(false);
+
+  const handleOpenDownloadManager = () => {
+    setOpenDownloadDialog(true);
+  };
+
+  const handleCloseDownloadManager = () => {
+    setOpenDownloadDialog(false);
   };
   // !SECTION
 
@@ -484,7 +609,13 @@ function LinkManager() {
         handleOpenEncryption();
       },
     },
-    { icon: <DownloadRounded />, name: "Download Manager" },
+    {
+      icon: <DownloadRounded />,
+      name: "Download Manager",
+      function: () => {
+        handleOpenDownloadManager();
+      },
+    },
   ];
 
   const editActions = [
@@ -547,6 +678,10 @@ function LinkManager() {
         setText={setText}
         open={openEncryptionDialog}
         onClose={handleCloseEncryption}
+      />
+      <DownloadDialog
+        open={isDownloadManagerOpen}
+        onClose={handleCloseDownloadManager}
       />
       <Box
         sx={{
