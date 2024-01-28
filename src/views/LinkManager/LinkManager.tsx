@@ -359,11 +359,20 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
 }
 
 interface DownloadDialogProps {
+  initList: {
+    id: number;
+    link: string;
+    filename: string;
+    progress: string;
+  }[];
   open: boolean;
   onClose: () => void;
 }
 
-function DownloadDialog({ open, onClose }: DownloadDialogProps) {
+function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
+  // useState hook to manage downloads state
+  const [downloads, setDownloads] = React.useState(initList);
+
   const handleCheckLinks = () => {
     console.log("Checking links...");
   };
@@ -376,20 +385,21 @@ function DownloadDialog({ open, onClose }: DownloadDialogProps) {
     event.stopPropagation();
   };
 
-  const downloads = [
-    {
-      id: 1,
-      link: "https://example.com/image.jpg",
-      filename: "image",
-      progress: "NOT READY",
-    },
-    {
-      id: 2,
-      link: "https://example.com/image.jpg",
-      filename: "pic",
-      progress: "NOT READY",
-    },
-  ];
+  // Handle filename change
+  const handleFilenameChange = (id: number, newFilename: string) => {
+    const updatedDownloads = downloads.map((download) => {
+      if (download.id === id) {
+        return { ...download, filename: newFilename };
+      }
+      return download;
+    });
+    setDownloads(updatedDownloads);
+  };
+
+  const onCancel = () => {
+    setDownloads(initList);
+    onClose();
+  };
 
   return (
     <Dialog
@@ -402,12 +412,8 @@ function DownloadDialog({ open, onClose }: DownloadDialogProps) {
       <DialogTitle>Download Manager</DialogTitle>
       <DialogContent>
         <Box sx={{ maxHeight: "60vh", overflow: "auto" }}>
-          {" "}
-          {/* Added for scrollable table */}
           <TableContainer component={Paper}>
             <Table stickyHeader>
-              {" "}
-              {/* Optional: stickyHeader for a fixed table header */}
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
@@ -425,8 +431,9 @@ function DownloadDialog({ open, onClose }: DownloadDialogProps) {
                       <TextField
                         size="small"
                         value={download.filename}
-                        onChange={() => {}}
-                        // Implement the onChange handler
+                        onChange={(e) =>
+                          handleFilenameChange(download.id, e.target.value)
+                        }
                       />
                     </TableCell>
                     <TableCell>{download.progress}</TableCell>
@@ -452,12 +459,12 @@ function DownloadDialog({ open, onClose }: DownloadDialogProps) {
           >
             Start Download
           </Button>
-          <Button variant="outlined" onClick={onClose} sx={{ ml: 1 }}>
+          <Button variant="outlined" onClick={onCancel} sx={{ ml: 1 }}>
             Cancel
           </Button>
         </Box>
         <Typography variant="body2" sx={{ mt: 2 }}>
-          Please check the links first!
+          Status: Please check the links first!
         </Typography>
       </DialogContent>
     </Dialog>
@@ -524,6 +531,22 @@ function LinkManager() {
   const handleCloseDownloadManager = () => {
     setOpenDownloadDialog(false);
   };
+
+  // TODO: Replace Initial downloads list
+  const initialDownloads = [
+    {
+      id: 1,
+      link: "https://example.com/image.jpg",
+      filename: "image",
+      progress: "NOT READY",
+    },
+    {
+      id: 2,
+      link: "https://example.com/image.jpg",
+      filename: "pic",
+      progress: "NOT READY",
+    },
+  ];
   // !SECTION
 
   // SECTION - File Import
@@ -680,6 +703,7 @@ function LinkManager() {
         onClose={handleCloseEncryption}
       />
       <DownloadDialog
+        initList={initialDownloads}
         open={isDownloadManagerOpen}
         onClose={handleCloseDownloadManager}
       />
