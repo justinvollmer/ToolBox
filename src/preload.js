@@ -4,11 +4,7 @@ const { contextBridge, ipcRenderer } = require("electron");
 
 contextBridge.exposeInMainWorld("ipcRenderer", {
   send: (channel, data) => {
-    let validSendChannels = [
-      "send-message",
-      "download-file",
-      "download-file-list",
-    ];
+    let validSendChannels = ["send-message", "download-file"];
     if (validSendChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
     }
