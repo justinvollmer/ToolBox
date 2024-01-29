@@ -1,3 +1,4 @@
+/* eslint-disable no-useless-escape */
 import * as React from "react";
 import {
   Box,
@@ -84,9 +85,29 @@ function LinkManager() {
       id: 1,
       link: "COULD NOT LOAD",
       filename: "COULD NOT LOAD",
-      progress: "NOT READY",
+      filetype: "COULD NOT LOAD",
+      progress: "COULD NOT LOAD",
     },
   ]);
+
+  const getFileTypeFromUrl = (url: string): string => {
+    // Remove trailing slash if it exists
+    const urlWithoutTrailingSlash = url.endsWith("/") ? url.slice(0, -1) : url;
+
+    // Regular expression to match the file extension
+    const regex = /\.([0-9a-z]+)(?:[\?#]|$)/i;
+
+    // Extract the file extension
+    const match = urlWithoutTrailingSlash.match(regex);
+    let fileType = match ? match[1] : "jpg";
+
+    // Special handling for webp files
+    if (fileType === "webp") {
+      fileType = "jpg";
+    }
+
+    return fileType;
+  };
 
   const transformTextToList = (
     rawText: string
@@ -94,12 +115,14 @@ function LinkManager() {
     id: number;
     link: string;
     filename: string;
+    filetype: string;
     progress: string;
   }> => {
     const listFromText: Array<{
       id: number;
       link: string;
       filename: string;
+      filetype: string;
       progress: string;
     }> = [];
 
@@ -110,14 +133,20 @@ function LinkManager() {
       if (line != "") {
         const lineSeperatedByValue = line.split(" ", 2);
 
+        const url = lineSeperatedByValue[0];
+        const filename = lineSeperatedByValue[1];
+
+        const filetype = getFileTypeFromUrl(url);
+
         if (lineSeperatedByValue.length < 2) {
           lineSeperatedByValue.push("");
         }
 
         listFromText.push({
           id: int++,
-          link: lineSeperatedByValue[0],
-          filename: lineSeperatedByValue[1],
+          link: url,
+          filename: filename,
+          filetype: filetype,
           progress: "NOT READY",
         });
       }
@@ -135,7 +164,6 @@ function LinkManager() {
   const handleCloseDownloadManager = () => {
     setOpenDownloadDialog(false);
   };
-
   // !SECTION
 
   // SECTION - File Import

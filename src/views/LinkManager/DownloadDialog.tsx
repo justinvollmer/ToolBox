@@ -23,6 +23,7 @@ interface DownloadDialogProps {
     id: number;
     link: string;
     filename: string;
+    filetype: string;
     progress: string;
   }[];
   open: boolean;
@@ -52,10 +53,14 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   };
 
   // Handle filename change
-  const handleFilenameChange = (id: number, newFilename: string) => {
+  const handleFilenameChange = (
+    id: number,
+    newFilename: string,
+    newFiletype: string
+  ) => {
     const updatedDownloads = downloads.map((download) => {
       if (download.id === id) {
-        return { ...download, filename: newFilename };
+        return { ...download, filename: newFilename, filetype: newFiletype };
       }
       return download;
     });
@@ -82,8 +87,12 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
-                  <TableCell sx={{ maxWidth: 150 }}>Link</TableCell>
-                  <TableCell>Filename</TableCell>
+                  <TableCell sx={{ maxWidth: 200 }}>Link</TableCell>{" "}
+                  {/* Longer width for link */}
+                  <TableCell sx={{ width: "30%" }}>Filename</TableCell>{" "}
+                  {/* Medium width for filename */}
+                  <TableCell sx={{ width: "10%" }}>Filetype</TableCell>{" "}
+                  {/* Smaller width for filetype */}
                   <TableCell>Progress</TableCell>
                 </TableRow>
               </TableHead>
@@ -93,7 +102,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                     <TableCell>{download.id}</TableCell>
                     <TableCell
                       sx={{
-                        maxWidth: 150,
+                        maxWidth: 200,
                         overflow: "hidden",
                         textOverflow: "ellipsis",
                         whiteSpace: "nowrap",
@@ -107,9 +116,28 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                         value={download.filename}
                         placeholder="filename"
                         onChange={(e) =>
-                          handleFilenameChange(download.id, e.target.value)
+                          handleFilenameChange(
+                            download.id,
+                            e.target.value,
+                            download.filetype
+                          )
                         }
-                        sx={{ width: "75%" }} // Adjust width as per requirement
+                        fullWidth
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <TextField
+                        size="small"
+                        value={download.filetype}
+                        placeholder="jpg"
+                        onChange={(e) =>
+                          handleFilenameChange(
+                            download.id,
+                            download.filename,
+                            e.target.value
+                          )
+                        }
+                        fullWidth
                       />
                     </TableCell>
                     <TableCell>{download.progress}</TableCell>
