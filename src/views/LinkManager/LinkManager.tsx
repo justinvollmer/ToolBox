@@ -373,7 +373,11 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   // useState hook to manage downloads state
   const [downloads, setDownloads] = React.useState(initList);
 
-  console.log(initList);
+  React.useEffect(() => {
+    if (open) {
+      setDownloads(initList);
+    }
+  }, [open, initList]);
 
   const handleCheckLinks = () => {
     console.log("Checking links...");
@@ -573,7 +577,6 @@ function LinkManager() {
   const handleOpenDownloadManager = () => {
     const list = transformTextToList(text);
     setInitialDownloadsList(list);
-    console.log(list);
     setOpenDownloadDialog(true);
   };
 
@@ -670,7 +673,6 @@ function LinkManager() {
       icon: <DownloadRounded />,
       name: "Download Manager",
       function: () => {
-        // FIXME - DownloadManager Button
         handleOpenDownloadManager();
       },
     },
