@@ -373,6 +373,8 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   // useState hook to manage downloads state
   const [downloads, setDownloads] = React.useState(initList);
 
+  console.log(initList);
+
   const handleCheckLinks = () => {
     console.log("Checking links...");
   };
@@ -404,7 +406,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={onCancel}
       onClick={handleBackdropClick}
       maxWidth="md"
       fullWidth
@@ -474,7 +476,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
 function LinkManager() {
   // SECTION - Textfield
   const defaultValue =
-    "https://example.com/\nhttps://example.com/\nhttps://example.com/";
+    "https://example.com/image.jpg\nhttps://example.com/image.jpg\nhttps://example.com/image.jpg";
 
   const [text, setText] = React.useState(defaultValue);
   const [textPriorChange, setTextPriorChange] = React.useState(defaultValue);
@@ -523,8 +525,55 @@ function LinkManager() {
 
   // SECTION - DownloadManager
   const [isDownloadManagerOpen, setOpenDownloadDialog] = React.useState(false);
+  const [initialDownloadsList, setInitialDownloadsList] = React.useState([
+    {
+      id: 1,
+      link: "COULD NOT LOAD",
+      filename: "COULD NOT LOAD",
+      progress: "NOT READY",
+    },
+  ]);
+
+  const transformTextToList = (
+    rawText: string
+  ): Array<{
+    id: number;
+    link: string;
+    filename: string;
+    progress: string;
+  }> => {
+    const listFromText: Array<{
+      id: number;
+      link: string;
+      filename: string;
+      progress: string;
+    }> = [];
+
+    const textSeperatedByLine = rawText.split("\n");
+    let int: number = 1;
+
+    textSeperatedByLine.forEach((line) => {
+      const lineSeperatedByValue = line.split(" ", 2);
+
+      if (lineSeperatedByValue.length < 2) {
+        lineSeperatedByValue.push("");
+      }
+
+      listFromText.push({
+        id: int++,
+        link: lineSeperatedByValue[0],
+        filename: lineSeperatedByValue[1],
+        progress: "NOT READY",
+      });
+    });
+
+    return listFromText;
+  };
 
   const handleOpenDownloadManager = () => {
+    const list = transformTextToList(text);
+    setInitialDownloadsList(list);
+    console.log(list);
     setOpenDownloadDialog(true);
   };
 
@@ -532,21 +581,6 @@ function LinkManager() {
     setOpenDownloadDialog(false);
   };
 
-  // TODO: Replace Initial downloads list
-  const initialDownloads = [
-    {
-      id: 1,
-      link: "https://example.com/image.jpg",
-      filename: "image",
-      progress: "NOT READY",
-    },
-    {
-      id: 2,
-      link: "https://example.com/image.jpg",
-      filename: "pic",
-      progress: "NOT READY",
-    },
-  ];
   // !SECTION
 
   // SECTION - File Import
@@ -636,6 +670,7 @@ function LinkManager() {
       icon: <DownloadRounded />,
       name: "Download Manager",
       function: () => {
+        // FIXME - DownloadManager Button
         handleOpenDownloadManager();
       },
     },
@@ -703,7 +738,7 @@ function LinkManager() {
         onClose={handleCloseEncryption}
       />
       <DownloadDialog
-        initList={initialDownloads}
+        initList={initialDownloadsList}
         open={isDownloadManagerOpen}
         onClose={handleCloseDownloadManager}
       />
