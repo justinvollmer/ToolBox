@@ -501,6 +501,7 @@ function LinkManager() {
     activateEdit(true);
   };
   const handleReadOnlyMode = () => {
+    setText(text.trim());
     activateEdit(false);
   };
   // !SECTION
@@ -553,22 +554,24 @@ function LinkManager() {
       progress: string;
     }> = [];
 
-    const textSeperatedByLine = rawText.split("\n");
+    const textSeperatedByLine = rawText.trim().split("\n");
     let int: number = 1;
 
     textSeperatedByLine.forEach((line) => {
-      const lineSeperatedByValue = line.split(" ", 2);
+      if (line != "") {
+        const lineSeperatedByValue = line.split(" ", 2);
 
-      if (lineSeperatedByValue.length < 2) {
-        lineSeperatedByValue.push("");
+        if (lineSeperatedByValue.length < 2) {
+          lineSeperatedByValue.push("");
+        }
+
+        listFromText.push({
+          id: int++,
+          link: lineSeperatedByValue[0],
+          filename: lineSeperatedByValue[1],
+          progress: "NOT READY",
+        });
       }
-
-      listFromText.push({
-        id: int++,
-        link: lineSeperatedByValue[0],
-        filename: lineSeperatedByValue[1],
-        progress: "NOT READY",
-      });
     });
 
     return listFromText;
@@ -599,7 +602,7 @@ function LinkManager() {
         if (file) {
           try {
             const content = await readFileAsync(file);
-            setText(content);
+            setText(content.trim());
           } catch (error) {
             console.error("Error reading file:", error);
           }
