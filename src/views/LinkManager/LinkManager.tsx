@@ -51,7 +51,6 @@ function LinkManager() {
     activateEdit(true);
   };
   const handleReadOnlyMode = () => {
-    setText(text.trim());
     activateEdit(false);
   };
   // !SECTION
@@ -254,6 +253,7 @@ function LinkManager() {
       name: "Reset",
       function: () => {
         setText(defaultValue);
+        setTextPriorChange(defaultValue);
         handleReadOnlyMode();
         handleClose();
       },
