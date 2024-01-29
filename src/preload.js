@@ -20,7 +20,6 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
       "download-file-list-error",
     ];
     if (validReceiveChannels.includes(channel)) {
-      // Remove existing listener if any, then add new one
       ipcRenderer
         .removeAllListeners(channel)
         .on(channel, (event, ...args) => func(...args));

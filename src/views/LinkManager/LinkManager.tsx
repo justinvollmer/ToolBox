@@ -17,8 +17,15 @@ import {
   ListItemAvatar,
   ListItemButton,
   ListItemText,
-  Typography,
   InputAdornment,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+  Paper,
 } from "@mui/material";
 
 import {
@@ -351,10 +358,129 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
   );
 }
 
+interface DownloadDialogProps {
+  initList: {
+    id: number;
+    link: string;
+    filename: string;
+    progress: string;
+  }[];
+  open: boolean;
+  onClose: () => void;
+}
+
+function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
+  // useState hook to manage downloads state
+  const [downloads, setDownloads] = React.useState(initList);
+
+  React.useEffect(() => {
+    if (open) {
+      setDownloads(initList);
+    }
+  }, [open, initList]);
+
+  const handleCheckLinks = () => {
+    console.log("Checking links...");
+  };
+
+  const handleStartDownload = () => {
+    console.log("Starting download...");
+  };
+
+  const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.stopPropagation();
+  };
+
+  // Handle filename change
+  const handleFilenameChange = (id: number, newFilename: string) => {
+    const updatedDownloads = downloads.map((download) => {
+      if (download.id === id) {
+        return { ...download, filename: newFilename };
+      }
+      return download;
+    });
+    setDownloads(updatedDownloads);
+  };
+
+  const onCancel = () => {
+    setDownloads(initList);
+    onClose();
+  };
+
+  return (
+    <Dialog
+      open={open}
+      onClose={onCancel}
+      onClick={handleBackdropClick}
+      maxWidth="md"
+      fullWidth
+    >
+      <DialogTitle>Download Manager</DialogTitle>
+      <DialogContent>
+        <Box sx={{ maxHeight: "60vh", overflow: "auto" }}>
+          <TableContainer component={Paper}>
+            <Table stickyHeader>
+              <TableHead>
+                <TableRow>
+                  <TableCell>ID</TableCell>
+                  <TableCell>Link</TableCell>
+                  <TableCell>Filename</TableCell>
+                  <TableCell>Progress</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {downloads.map((download) => (
+                  <TableRow key={download.id}>
+                    <TableCell>{download.id}</TableCell>
+                    <TableCell>{download.link}</TableCell>
+                    <TableCell>
+                      <TextField
+                        size="small"
+                        value={download.filename}
+                        onChange={(e) =>
+                          handleFilenameChange(download.id, e.target.value)
+                        }
+                      />
+                    </TableCell>
+                    <TableCell>{download.progress}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
+        <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+          <TextField
+            label="Interval (seconds/image)"
+            size="small"
+            sx={{ mr: 1 }}
+          />
+          <Button variant="outlined" onClick={handleCheckLinks}>
+            Check Links for compatibility
+          </Button>
+          <Button
+            variant="outlined"
+            onClick={handleStartDownload}
+            sx={{ ml: 1 }}
+          >
+            Start Download
+          </Button>
+          <Button variant="outlined" onClick={onCancel} sx={{ ml: 1 }}>
+            Cancel
+          </Button>
+        </Box>
+        <Typography variant="body2" sx={{ mt: 2 }}>
+          Status: Please check the links first!
+        </Typography>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function LinkManager() {
   // SECTION - Textfield
   const defaultValue =
-    "https://example.com/\nhttps://example.com/\nhttps://example.com/";
+    "https://example.com/image.jpg\nhttps://example.com/image.jpg\nhttps://example.com/image.jpg";
 
   const [text, setText] = React.useState(defaultValue);
   const [textPriorChange, setTextPriorChange] = React.useState(defaultValue);
@@ -375,6 +501,7 @@ function LinkManager() {
     activateEdit(true);
   };
   const handleReadOnlyMode = () => {
+    setText(text.trim());
     activateEdit(false);
   };
   // !SECTION
@@ -401,6 +528,67 @@ function LinkManager() {
   };
   // !SECTION
 
+  // SECTION - DownloadManager
+  const [isDownloadManagerOpen, setOpenDownloadDialog] = React.useState(false);
+  const [initialDownloadsList, setInitialDownloadsList] = React.useState([
+    {
+      id: 1,
+      link: "COULD NOT LOAD",
+      filename: "COULD NOT LOAD",
+      progress: "NOT READY",
+    },
+  ]);
+
+  const transformTextToList = (
+    rawText: string
+  ): Array<{
+    id: number;
+    link: string;
+    filename: string;
+    progress: string;
+  }> => {
+    const listFromText: Array<{
+      id: number;
+      link: string;
+      filename: string;
+      progress: string;
+    }> = [];
+
+    const textSeperatedByLine = rawText.trim().split("\n");
+    let int: number = 1;
+
+    textSeperatedByLine.forEach((line) => {
+      if (line != "") {
+        const lineSeperatedByValue = line.split(" ", 2);
+
+        if (lineSeperatedByValue.length < 2) {
+          lineSeperatedByValue.push("");
+        }
+
+        listFromText.push({
+          id: int++,
+          link: lineSeperatedByValue[0],
+          filename: lineSeperatedByValue[1],
+          progress: "NOT READY",
+        });
+      }
+    });
+
+    return listFromText;
+  };
+
+  const handleOpenDownloadManager = () => {
+    const list = transformTextToList(text);
+    setInitialDownloadsList(list);
+    setOpenDownloadDialog(true);
+  };
+
+  const handleCloseDownloadManager = () => {
+    setOpenDownloadDialog(false);
+  };
+
+  // !SECTION
+
   // SECTION - File Import
   const openFileDialog = async () => {
     try {
@@ -414,7 +602,7 @@ function LinkManager() {
         if (file) {
           try {
             const content = await readFileAsync(file);
-            setText(content);
+            setText(content.trim());
           } catch (error) {
             console.error("Error reading file:", error);
           }
@@ -484,7 +672,13 @@ function LinkManager() {
         handleOpenEncryption();
       },
     },
-    { icon: <DownloadRounded />, name: "Download Manager" },
+    {
+      icon: <DownloadRounded />,
+      name: "Download Manager",
+      function: () => {
+        handleOpenDownloadManager();
+      },
+    },
   ];
 
   const editActions = [
@@ -547,6 +741,11 @@ function LinkManager() {
         setText={setText}
         open={openEncryptionDialog}
         onClose={handleCloseEncryption}
+      />
+      <DownloadDialog
+        initList={initialDownloadsList}
+        open={isDownloadManagerOpen}
+        onClose={handleCloseDownloadManager}
       />
       <Box
         sx={{

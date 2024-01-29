@@ -6,17 +6,9 @@ function Dev() {
   return (
     <div>
       <p className="unselectable">
-        This page is for testing and development only! This page will removed
+        This page is for testing and development only! This page will be removed
         later on!
       </p>
-      <Button
-        variant="contained"
-        color="primary"
-        component={Link}
-        to={"/dev/encryption"}
-      >
-        Encryption Test
-      </Button>
       <Button
         variant="contained"
         color="error"
