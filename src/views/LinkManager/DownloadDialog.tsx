@@ -66,13 +66,12 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setDownloads(initList);
     onClose();
   };
-
   return (
     <Dialog
       open={open}
       onClose={onCancel}
       onClick={handleBackdropClick}
-      maxWidth="md"
+      maxWidth="xl"
       fullWidth
     >
       <DialogTitle>Download Manager</DialogTitle>
@@ -83,7 +82,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
-                  <TableCell>Link</TableCell>
+                  <TableCell sx={{ maxWidth: 150 }}>Link</TableCell>
                   <TableCell>Filename</TableCell>
                   <TableCell>Progress</TableCell>
                 </TableRow>
@@ -92,7 +91,16 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                 {downloads.map((download) => (
                   <TableRow key={download.id}>
                     <TableCell>{download.id}</TableCell>
-                    <TableCell>{download.link}</TableCell>
+                    <TableCell
+                      sx={{
+                        maxWidth: 150,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {download.link}
+                    </TableCell>
                     <TableCell>
                       <TextField
                         size="small"
@@ -101,6 +109,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                         onChange={(e) =>
                           handleFilenameChange(download.id, e.target.value)
                         }
+                        sx={{ width: "75%" }} // Adjust width as per requirement
                       />
                     </TableCell>
                     <TableCell>{download.progress}</TableCell>
