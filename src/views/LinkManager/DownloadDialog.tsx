@@ -113,7 +113,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                     <TableCell>
                       <TextField
                         size="small"
-                        value={download.filename}
+                        value={download.filename || ""}
                         placeholder="filename"
                         onChange={(e) =>
                           handleFilenameChange(
@@ -128,7 +128,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                     <TableCell>
                       <TextField
                         size="small"
-                        value={download.filetype}
+                        value={download.filetype || ""}
                         placeholder="jpg"
                         onChange={(e) =>
                           handleFilenameChange(
