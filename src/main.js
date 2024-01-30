@@ -50,7 +50,13 @@ ipcMain.on(
       const response = await axios.get(url, { responseType: "stream" });
 
       if (response.status === 200) {
-        const fullFileName = `${fileName}.${fileType}`;
+        const defaultFileType =
+          fileType || response.headers["content-type"].split("/")[1];
+        if (!defaultFileType) {
+          throw new Error("Unable to determine file type.");
+        }
+
+        const fullFileName = `${fileName}.${defaultFileType}`;
         const outputPath = path.join(outputFolder, fullFileName);
 
         const writer = fs.createWriteStream(outputPath);

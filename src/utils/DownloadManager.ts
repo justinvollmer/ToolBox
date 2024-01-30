@@ -5,7 +5,7 @@ async function download(
   url: string,
   fileName: string,
   outputFolder: string,
-  fileType: string
+  fileType?: string
 ): Promise<void> {
   // Send an IPC message to the main process to initiate the download
   ipcRenderer.send("download-file", { url, fileName, outputFolder, fileType });
@@ -23,16 +23,17 @@ async function download(
 }
 
 async function downloadFromList(
-  urlList: { id: number; url: string; filename: string; fileType: string }[],
-  outputFolder: string
+  urlList: { url: string; filename: string }[],
+  outputFolder: string,
+  fileType?: string
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
-    urlList.forEach((file) => {
+    urlList.forEach((file, index) => {
       ipcRenderer.send("download-file", {
         url: file.url,
-        fileName: `${file.filename} (${file.id})`,
+        fileName: `${file.filename} (${index + 1})`,
         outputFolder,
-        fileType: file.fileType,
+        fileType,
       });
     });
 
