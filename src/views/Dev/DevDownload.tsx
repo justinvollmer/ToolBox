@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// LINK - https://i.imgur.com/jbKNByH.jpg
 import * as React from "react";
 import { Button, TextField, Container, Typography, Box } from "@mui/material";
 import { download, downloadFromList } from "../../utils/DownloadManager";
 
 function DevDownload() {
-  const [url, setUrl] = React.useState("");
-  const [filename, setFilename] = React.useState("");
+  const [url, setUrl] = React.useState("https://i.imgur.com/jbKNByH.jpg");
+  const [filename, setFilename] = React.useState("imageName");
+  const [filetype, setFiletype] = React.useState("jpg");
   const [downloadFolder, setDownloadFolder] = React.useState("./src/downloads");
   const [urlList, setUrlList] = React.useState<
-    { url: string; filename: string }[]
+    { url: string; filename: string; filetype: string }[]
   >([]);
   const [status, setStatus] = React.useState("");
 
   const handleDownload = async () => {
     try {
-      await download(url, filename, downloadFolder);
+      await download(url, filename, downloadFolder, filetype);
       setStatus(`Downloaded ${filename}`);
     } catch (error: any) {
       setStatus(`Error: ${error.message}`);
@@ -32,7 +32,7 @@ function DevDownload() {
   };
 
   const addToList = () => {
-    setUrlList([...urlList, { url, filename }]);
+    setUrlList([...urlList, { url, filename, filetype }]);
     setUrl("");
     setFilename("");
   };
@@ -54,6 +54,13 @@ function DevDownload() {
           label="Filename"
           value={filename}
           onChange={(e) => setFilename(e.target.value)}
+          fullWidth
+          margin="normal"
+        />
+        <TextField
+          label="Filetype"
+          value={filetype}
+          onChange={(e) => setFiletype(e.target.value)}
           fullWidth
           margin="normal"
         />
