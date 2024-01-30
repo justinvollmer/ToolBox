@@ -23,6 +23,7 @@ interface DownloadDialogProps {
     id: number;
     link: string;
     filename: string;
+    filetype: string;
     progress: string;
   }[];
   open: boolean;
@@ -52,10 +53,14 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   };
 
   // Handle filename change
-  const handleFilenameChange = (id: number, newFilename: string) => {
+  const handleFilenameChange = (
+    id: number,
+    newFilename: string,
+    newFiletype: string
+  ) => {
     const updatedDownloads = downloads.map((download) => {
       if (download.id === id) {
-        return { ...download, filename: newFilename };
+        return { ...download, filename: newFilename, filetype: newFiletype };
       }
       return download;
     });
@@ -66,13 +71,12 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setDownloads(initList);
     onClose();
   };
-
   return (
     <Dialog
       open={open}
       onClose={onCancel}
       onClick={handleBackdropClick}
-      maxWidth="md"
+      maxWidth="xl"
       fullWidth
     >
       <DialogTitle>Download Manager</DialogTitle>
@@ -83,8 +87,12 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
-                  <TableCell>Link</TableCell>
-                  <TableCell>Filename</TableCell>
+                  <TableCell sx={{ maxWidth: 200 }}>Link</TableCell>{" "}
+                  {/* Longer width for link */}
+                  <TableCell sx={{ width: "30%" }}>Filename</TableCell>{" "}
+                  {/* Medium width for filename */}
+                  <TableCell sx={{ width: "10%" }}>Filetype</TableCell>{" "}
+                  {/* Smaller width for filetype */}
                   <TableCell>Progress</TableCell>
                 </TableRow>
               </TableHead>
@@ -92,15 +100,44 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                 {downloads.map((download) => (
                   <TableRow key={download.id}>
                     <TableCell>{download.id}</TableCell>
-                    <TableCell>{download.link}</TableCell>
+                    <TableCell
+                      sx={{
+                        maxWidth: 200,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        whiteSpace: "nowrap",
+                      }}
+                    >
+                      {download.link}
+                    </TableCell>
                     <TableCell>
                       <TextField
                         size="small"
                         value={download.filename}
                         placeholder="filename"
                         onChange={(e) =>
-                          handleFilenameChange(download.id, e.target.value)
+                          handleFilenameChange(
+                            download.id,
+                            e.target.value,
+                            download.filetype
+                          )
                         }
+                        fullWidth
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <TextField
+                        size="small"
+                        value={download.filetype}
+                        placeholder="jpg"
+                        onChange={(e) =>
+                          handleFilenameChange(
+                            download.id,
+                            download.filename,
+                            e.target.value
+                          )
+                        }
+                        fullWidth
                       />
                     </TableCell>
                     <TableCell>{download.progress}</TableCell>

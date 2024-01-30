@@ -17,6 +17,14 @@ function Dev() {
       >
         IPC Test
       </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        component={Link}
+        to={"/dev/download"}
+      >
+        Download Test
+      </Button>
     </div>
   );
 }
