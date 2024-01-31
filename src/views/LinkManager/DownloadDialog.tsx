@@ -43,10 +43,6 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     }
   }, [open, initList]);
 
-  const handleCheckURLs = () => {
-    console.log("Checking URLs...");
-  };
-
   const handleStartDownload = () => {
     console.log("Starting download...");
 
@@ -163,9 +159,6 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
             size="small"
             sx={{ mr: 1 }}
           />
-          <Button variant="outlined" onClick={handleCheckURLs}>
-            Check URLs for compatibility
-          </Button>
           <Button
             variant="outlined"
             onClick={handleStartDownload}
