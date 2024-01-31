@@ -23,9 +23,8 @@ async function download(
 }
 
 async function downloadFromList(
-  urlList: { url: string; filename: string }[],
-  outputFolder: string,
-  fileType?: string
+  urlList: { url: string; filename: string; filetype: string }[],
+  outputFolder: string
 ): Promise<void> {
   return new Promise<void>((resolve, reject) => {
     urlList.forEach((file, index) => {
@@ -33,7 +32,7 @@ async function downloadFromList(
         url: file.url,
         fileName: `${file.filename} (${index + 1})`,
         outputFolder,
-        fileType,
+        fileType: file.filetype,
       });
     });
 
