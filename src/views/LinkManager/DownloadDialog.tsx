@@ -18,10 +18,12 @@ import {
 
 import "./LinkManager.scss";
 
+import { downloadFromList } from "../../utils/DownloadManager";
+
 interface DownloadDialogProps {
   initList: {
     id: number;
-    link: string;
+    url: string;
     filename: string;
     filetype: string;
     progress: string;
@@ -33,6 +35,7 @@ interface DownloadDialogProps {
 function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   // useState hook to manage downloads state
   const [downloads, setDownloads] = React.useState(initList);
+  const [downloadFolder] = React.useState("./src/downloads");
 
   React.useEffect(() => {
     if (open) {
@@ -40,12 +43,19 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     }
   }, [open, initList]);
 
-  const handleCheckLinks = () => {
-    console.log("Checking links...");
+  const handleCheckURLs = () => {
+    console.log("Checking URLs...");
   };
 
   const handleStartDownload = () => {
     console.log("Starting download...");
+
+    const strippedDownloads = downloads.map(
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      ({ id, progress, ...rest }) => rest
+    );
+
+    downloadFromList(strippedDownloads, downloadFolder);
   };
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -87,8 +97,8 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
               <TableHead>
                 <TableRow>
                   <TableCell>ID</TableCell>
-                  <TableCell sx={{ maxWidth: 200 }}>Link</TableCell>{" "}
-                  {/* Longer width for link */}
+                  <TableCell sx={{ maxWidth: 200 }}>URL</TableCell>{" "}
+                  {/* Longer width for url */}
                   <TableCell sx={{ width: "30%" }}>Filename</TableCell>{" "}
                   {/* Medium width for filename */}
                   <TableCell sx={{ width: "10%" }}>Filetype</TableCell>{" "}
@@ -108,7 +118,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                         whiteSpace: "nowrap",
                       }}
                     >
-                      {download.link}
+                      {download.url}
                     </TableCell>
                     <TableCell>
                       <TextField
@@ -153,8 +163,8 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
             size="small"
             sx={{ mr: 1 }}
           />
-          <Button variant="outlined" onClick={handleCheckLinks}>
-            Check Links for compatibility
+          <Button variant="outlined" onClick={handleCheckURLs}>
+            Check URLs for compatibility
           </Button>
           <Button
             variant="outlined"
@@ -168,7 +178,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
           </Button>
         </Box>
         <Typography variant="body2" sx={{ mt: 2 }}>
-          Status: Please check the links first!
+          Status: Please check the URLs first!
         </Typography>
       </DialogContent>
     </Dialog>

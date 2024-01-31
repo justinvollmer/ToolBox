@@ -83,7 +83,7 @@ function LinkManager() {
   const [initialDownloadsList, setInitialDownloadsList] = React.useState([
     {
       id: 1,
-      link: "COULD NOT LOAD",
+      url: "COULD NOT LOAD",
       filename: "COULD NOT LOAD",
       filetype: "COULD NOT LOAD",
       progress: "COULD NOT LOAD",
@@ -113,14 +113,14 @@ function LinkManager() {
     rawText: string
   ): Array<{
     id: number;
-    link: string;
+    url: string;
     filename: string;
     filetype: string;
     progress: string;
   }> => {
     const listFromText: Array<{
       id: number;
-      link: string;
+      url: string;
       filename: string;
       filetype: string;
       progress: string;
@@ -144,7 +144,7 @@ function LinkManager() {
 
         listFromText.push({
           id: int++,
-          link: url,
+          url: url,
           filename: filename,
           filetype: filetype,
           progress: "NOT READY",

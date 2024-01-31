@@ -3,31 +3,30 @@ import * as React from "react";
 import { Button, TextField, Container, Typography, Box } from "@mui/material";
 import { download, downloadFromList } from "../../utils/DownloadManager";
 
+import "./Dev.scss";
+
 function DevDownload() {
   const [url, setUrl] = React.useState("https://i.imgur.com/jbKNByH.jpg");
   const [filename, setFilename] = React.useState("imageName");
   const [filetype, setFiletype] = React.useState("jpg");
-  const [downloadFolder, setDownloadFolder] = React.useState("./src/downloads");
+  const [downloadFolder] = React.useState("./src/downloads");
   const [urlList, setUrlList] = React.useState<
     { url: string; filename: string; filetype: string }[]
   >([]);
-  const [status, setStatus] = React.useState("");
 
   const handleDownload = async () => {
     try {
       await download(url, filename, downloadFolder, filetype);
-      setStatus(`Downloaded ${filename}`);
     } catch (error: any) {
-      setStatus(`Error: ${error.message}`);
+      console.log(`Error: ${error.message}`);
     }
   };
 
   const handleBulkDownload = async () => {
     try {
       await downloadFromList(urlList, downloadFolder);
-      setStatus(`Bulk download complete`);
     } catch (error: any) {
-      setStatus(`Error: ${error.message}`);
+      console.log(`Error: ${error.message}`);
     }
   };
 
@@ -38,8 +37,8 @@ function DevDownload() {
   };
 
   return (
-    <Container>
-      <Typography variant="h4" gutterBottom>
+    <Container sx={{ margin: "25px" }}>
+      <Typography variant="h4" gutterBottom className="unselectable">
         Dev Download Test Page
       </Typography>
       <Box>
@@ -64,13 +63,6 @@ function DevDownload() {
           fullWidth
           margin="normal"
         />
-        <TextField
-          label="Download Folder"
-          value={downloadFolder}
-          onChange={(e) => setDownloadFolder(e.target.value)}
-          fullWidth
-          margin="normal"
-        />
         <Button variant="contained" color="primary" onClick={addToList}>
           Add to List
         </Button>
@@ -85,7 +77,6 @@ function DevDownload() {
           Bulk Download
         </Button>
       </Box>
-      <Typography variant="body1">{status}</Typography>
     </Container>
   );
 }
