@@ -1,5 +1,7 @@
 # React + TypeScript + Vite
 
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/justinvollmer/LinkManager/blob/main/LICENSE)
+
 Copyright Notice for used Icons (that require a copyright notice):
 
 Icon Source | Author | License

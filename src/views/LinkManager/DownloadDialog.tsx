@@ -36,6 +36,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   // useState hook to manage downloads state
   const [downloads, setDownloads] = React.useState(initList);
   const [downloadFolder] = React.useState("./src/downloads");
+  const [delayInSeconds, setDelayInSeconds] = React.useState(1);
 
   React.useEffect(() => {
     if (open) {
@@ -75,6 +76,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
 
   const onCancel = () => {
     setDownloads(initList);
+    setDelayInSeconds(1);
     onClose();
   };
   return (
@@ -158,6 +160,16 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
             label="Interval (seconds/image)"
             size="small"
             sx={{ mr: 1 }}
+            type="number"
+            value={delayInSeconds}
+            onChange={(e) => {
+              const value = parseFloat(e.target.value);
+              if (!isNaN(value)) {
+                setDelayInSeconds(value);
+              } else {
+                setDelayInSeconds(0);
+              }
+            }}
           />
           <Button
             variant="outlined"
