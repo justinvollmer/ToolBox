@@ -37,6 +37,9 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   const [downloads, setDownloads] = React.useState(initList);
   const [downloadFolder] = React.useState("./src/downloads");
   const [delaySec, setDelaySec] = React.useState(1);
+  const [isReady, setReady] = React.useState(false);
+  const defaultStatus: string = "Status: Please click on 'Check list' first.";
+  const [statusText, setStatusText] = React.useState(defaultStatus);
 
   React.useEffect(() => {
     if (open) {
@@ -44,12 +47,26 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     }
   }, [open, initList]);
 
+  const handleCheck = () => {
+    const missingFilenameItem = downloads.find(
+      (element) => element.filename === ""
+    );
+
+    if (missingFilenameItem) {
+      setStatusText("Status: There are entries with missing filenames!");
+      return;
+    } else {
+      setStatusText("Status: Ready to start Download!");
+      setReady(true);
+    }
+  };
+
   const handleStartDownload = () => {
     console.log("Starting download...");
 
     const strippedDownloads = downloads.map(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ({ id, progress, ...rest }) => rest
+      ({ progress, ...rest }) => rest
     );
 
     downloadFromList(strippedDownloads, downloadFolder, delaySec);
@@ -77,6 +94,8 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   const onCancel = () => {
     setDownloads(initList);
     setDelaySec(1);
+    setReady(false);
+    setStatusText(defaultStatus);
     onClose();
   };
   return (
@@ -173,8 +192,17 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
           />
           <Button
             variant="outlined"
+            onClick={handleCheck}
+            sx={{ ml: 1 }}
+            disabled={isReady}
+          >
+            Check list
+          </Button>
+          <Button
+            variant="outlined"
             onClick={handleStartDownload}
             sx={{ ml: 1 }}
+            disabled={!isReady}
           >
             Start Download
           </Button>
@@ -183,7 +211,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
           </Button>
         </Box>
         <Typography variant="body2" sx={{ mt: 2 }}>
-          Status: Please check the URLs first!
+          {statusText}
         </Typography>
       </DialogContent>
     </Dialog>

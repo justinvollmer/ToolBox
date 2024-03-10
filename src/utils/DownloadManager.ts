@@ -29,7 +29,7 @@ async function download(
 }
 
 async function downloadFromList(
-  urlList: { url: string; filename: string; filetype: string }[],
+  urlList: { id: number; url: string; filename: string; filetype: string }[],
   outputFolder: string,
   delaySec: number
 ): Promise<void> {
@@ -37,8 +37,8 @@ async function downloadFromList(
     const file = urlList[i];
     await new Promise<void>((resolve, reject) => {
       // Listen for the success or error of the current download
-      const successEvent = `download-file-success-${i}`;
-      const errorEvent = `download-file-error-${i}`;
+      const successEvent = `download-file-success-${file.id}`;
+      const errorEvent = `download-file-error-${file.id}`;
 
       ipcRenderer.once(successEvent, () => {
         setTimeout(() => {
@@ -54,7 +54,7 @@ async function downloadFromList(
       // Send the download request
       ipcRenderer.send("download-file", {
         url: file.url,
-        fileName: `${file.filename} (${i + 1})`,
+        fileName: `${file.filename} (${file.id})`,
         outputFolder,
         fileType: file.filetype,
         delaySec: delaySec,

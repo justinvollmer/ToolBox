@@ -133,8 +133,7 @@ function LinkManager() {
       if (line != "") {
         const lineSeperatedByValue = line.split(" ", 2);
 
-        const url = lineSeperatedByValue[0];
-        const filename = lineSeperatedByValue[1];
+        const url = lineSeperatedByValue[0].trim();
 
         const filetype = getFileTypeFromUrl(url);
 
@@ -145,7 +144,7 @@ function LinkManager() {
         listFromText.push({
           id: int++,
           url: url,
-          filename: filename,
+          filename: "",
           filetype: filetype,
           progress: "NOT READY",
         });
