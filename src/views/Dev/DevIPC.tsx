@@ -1,6 +1,6 @@
 import * as React from "react";
 import { TextField, Button } from "@mui/material/";
-const { ipcRenderer } = window; // NOTE - Ignore this error message, it works
+const { ipcRenderer } = window;
 
 const DevIPC = () => {
   const [message, setMessage] = React.useState("");

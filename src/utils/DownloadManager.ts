@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const { ipcRenderer } = window; // NOTE - Ignore this error message, it works
+const { ipcRenderer } = window;
 
 async function download(
   url: string,
@@ -17,12 +17,12 @@ async function download(
     const errorEvent = `download-file-error-${fileName}`;
 
     // Listen for the success response for this specific download
-    ipcRenderer.once(successEvent, (event: any, message: any) => {
+    ipcRenderer.once(successEvent, (_event: any, message: any) => {
       resolve(message);
     });
 
     // Listen for the error response for this specific download
-    ipcRenderer.once(errorEvent, (event: any, message: any) => {
+    ipcRenderer.once(errorEvent, (_event: any, message: any) => {
       reject(new Error(message));
     });
   });
@@ -47,7 +47,7 @@ async function downloadFromList(
         }, delaySec * 1000); // Convert seconds to milliseconds
       });
 
-      ipcRenderer.once(errorEvent, (event: any, message: any) => {
+      ipcRenderer.once(errorEvent, (_event: any, message: any) => {
         reject(new Error(message));
       });
 
