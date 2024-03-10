@@ -38,7 +38,6 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   const [downloadFolder] = React.useState("./src/downloads");
   const [delaySec, setDelaySec] = React.useState(1);
 
-  const [isChecked, setChecked] = React.useState(false);
   const [isEligibleForDownload, setEligibleForDownload] = React.useState(false);
   const [isLocked, setLocked] = React.useState(false);
 
@@ -54,27 +53,42 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
 
   const handleCheck = () => {
     const missingFilenameItem = downloads.find((file) => file.filename === "");
+    const illegalCharsPattern = /[<>:"/\\|?*]/;
+    const illegalFilenameItem = downloads.find((file) =>
+      illegalCharsPattern.test(file.filename)
+    );
 
     if (missingFilenameItem) {
       setStatusText("There are entries with missing filenames!");
       setStatusTextColor("red");
       return;
+    } else if (illegalFilenameItem) {
+      setStatusText(
+        "There are entries with illegal characters in their filenames!"
+      );
+      setStatusTextColor("red");
+      return;
     } else {
       setStatusText("Ready to start the download!");
       setStatusTextColor("green");
-      setChecked(true);
-      setEligibleForDownload(true);
+      setReady(true);
     }
   };
 
+  const handleUnlock = () => {
+    setStatusText(defaultStatusText);
+    setStatusTextColor("black");
+    setReady(false);
+  };
+
   const setReady = (isReady: boolean) => {
-    setChecked(isReady);
     setEligibleForDownload(isReady);
     setLocked(isReady);
   };
 
   const handleStartDownload = async () => {
     setReady(true);
+    setEligibleForDownload(false);
 
     setStatusText("Downloading...");
     setStatusTextColor("orange");
@@ -132,21 +146,27 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
       maxWidth="xl"
       fullWidth
     >
-      <DialogTitle>Download Manager</DialogTitle>
+      <DialogTitle className="unselectable">Download Manager</DialogTitle>
       <DialogContent>
         <Box sx={{ maxHeight: "60vh", overflow: "auto" }}>
           <TableContainer component={Paper}>
             <Table stickyHeader>
               <TableHead>
                 <TableRow>
-                  <TableCell>ID</TableCell>
-                  <TableCell sx={{ maxWidth: 200 }}>URL</TableCell>{" "}
+                  <TableCell className="unselectable">ID</TableCell>
+                  <TableCell sx={{ maxWidth: 200 }} className="unselectable">
+                    URL
+                  </TableCell>{" "}
                   {/* Longer width for url */}
-                  <TableCell sx={{ width: "30%" }}>Filename</TableCell>{" "}
+                  <TableCell sx={{ width: "30%" }} className="unselectable">
+                    Filename
+                  </TableCell>{" "}
                   {/* Medium width for filename */}
-                  <TableCell sx={{ width: "10%" }}>Filetype</TableCell>{" "}
+                  <TableCell sx={{ width: "10%" }} className="unselectable">
+                    Filetype
+                  </TableCell>{" "}
                   {/* Smaller width for filetype */}
-                  <TableCell>Progress</TableCell>
+                  <TableCell className="unselectable">Progress</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -219,14 +239,16 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
               }
             }}
           />
-          <Button
-            variant="outlined"
-            onClick={handleCheck}
-            sx={{ ml: 1 }}
-            disabled={isChecked}
-          >
-            Check list
-          </Button>
+          {isLocked && isEligibleForDownload && (
+            <Button variant="outlined" onClick={handleUnlock} sx={{ ml: 1 }}>
+              Unlock
+            </Button>
+          )}
+          {!isLocked && (
+            <Button variant="outlined" onClick={handleCheck} sx={{ ml: 1 }}>
+              Check list
+            </Button>
+          )}
           <Button
             variant="outlined"
             onClick={handleStartDownload}
