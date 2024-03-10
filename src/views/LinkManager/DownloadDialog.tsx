@@ -49,7 +49,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
 
     const strippedDownloads = downloads.map(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ({ id, progress, ...rest }) => rest
+      ({ progress, ...rest }) => rest
     );
 
     downloadFromList(strippedDownloads, downloadFolder, delaySec);
