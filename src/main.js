@@ -11,7 +11,7 @@ const createMainWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-      nodeIntegration: true,
+      nodeIntegration: false,
       contextIsolation: true,
       preload: path.join(__dirname, "./preload.js"),
     },
@@ -45,8 +45,22 @@ ipcMain.on("send-message", (event, message) => {
 
 ipcMain.on(
   "download-file",
-  async (event, { url, fileName, outputFolder, fileType }) => {
+  async (
+    event,
+    {
+      url,
+      fileName,
+      outputFolder,
+      fileType,
+      delaySec = 0,
+      successEvent = "download-file-success",
+      errorEvent = "download-file-error",
+    }
+  ) => {
     try {
+      // Wait for the specified delay before starting the download
+      await new Promise((resolve) => setTimeout(resolve, delaySec * 1000));
+
       const response = await axios.get(url, { responseType: "stream" });
 
       if (response.status === 200) {
@@ -63,24 +77,25 @@ ipcMain.on(
         response.data.pipe(writer);
 
         await new Promise((resolve, reject) => {
-          writer.on("finish", resolve);
-          writer.on("error", reject);
+          writer.on("finish", () => {
+            event.reply(
+              successEvent,
+              `File downloaded successfully to ${outputPath}`
+            );
+            resolve();
+          });
+          writer.on("error", (error) => {
+            event.reply(errorEvent, `Error downloading file: ${error.message}`);
+            reject(error);
+          });
         });
-
-        event.reply(
-          "download-file-success",
-          `File downloaded successfully to ${outputPath}`
-        );
       } else {
         throw new Error(
           `Failed to download file. Status code: ${response.status}`
         );
       }
     } catch (error) {
-      event.reply(
-        "download-file-error",
-        `Error downloading file: ${error.message}`
-      );
+      event.reply(errorEvent, `Error downloading file: ${error.message}`);
     }
   }
 );

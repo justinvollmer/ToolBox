@@ -12,38 +12,57 @@ async function download(
 
   // Return a Promise to handle success or error responses
   return new Promise((resolve, reject) => {
-    ipcRenderer.send("download-file-success", (event: any, message: any) => {
+    // Unique identifiers for success and error events
+    const successEvent = `download-file-success-${fileName}`;
+    const errorEvent = `download-file-error-${fileName}`;
+
+    // Listen for the success response for this specific download
+    ipcRenderer.once(successEvent, (event: any, message: any) => {
       resolve(message);
     });
 
-    ipcRenderer.send("download-file-error", (event: any, message: any) => {
-      reject(message);
+    // Listen for the error response for this specific download
+    ipcRenderer.once(errorEvent, (event: any, message: any) => {
+      reject(new Error(message));
     });
   });
 }
 
 async function downloadFromList(
   urlList: { url: string; filename: string; filetype: string }[],
-  outputFolder: string
+  outputFolder: string,
+  delaySec: number
 ): Promise<void> {
-  return new Promise<void>((resolve, reject) => {
-    urlList.forEach((file, index) => {
+  for (let i = 0; i < urlList.length; i++) {
+    const file = urlList[i];
+    await new Promise<void>((resolve, reject) => {
+      // Listen for the success or error of the current download
+      const successEvent = `download-file-success-${i}`;
+      const errorEvent = `download-file-error-${i}`;
+
+      ipcRenderer.once(successEvent, () => {
+        setTimeout(() => {
+          // Add delay after download before starting next
+          resolve();
+        }, delaySec * 1000); // Convert seconds to milliseconds
+      });
+
+      ipcRenderer.once(errorEvent, (event: any, message: any) => {
+        reject(new Error(message));
+      });
+
+      // Send the download request
       ipcRenderer.send("download-file", {
         url: file.url,
-        fileName: `${file.filename} (${index + 1})`,
+        fileName: `${file.filename} (${i + 1})`,
         outputFolder,
         fileType: file.filetype,
+        delaySec: delaySec,
+        successEvent,
+        errorEvent,
       });
     });
-
-    ipcRenderer.once("download-file-list-success", () => {
-      resolve();
-    });
-
-    ipcRenderer.once("download-file-list-error", (message: any) => {
-      reject(new Error(message));
-    });
-  });
+  }
 }
 
 export { download, downloadFromList };

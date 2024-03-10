@@ -36,7 +36,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   // useState hook to manage downloads state
   const [downloads, setDownloads] = React.useState(initList);
   const [downloadFolder] = React.useState("./src/downloads");
-  const [delayInSeconds, setDelayInSeconds] = React.useState(1);
+  const [delaySec, setDelaySec] = React.useState(1);
 
   React.useEffect(() => {
     if (open) {
@@ -52,7 +52,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
       ({ id, progress, ...rest }) => rest
     );
 
-    downloadFromList(strippedDownloads, downloadFolder);
+    downloadFromList(strippedDownloads, downloadFolder, delaySec);
   };
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -76,7 +76,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
 
   const onCancel = () => {
     setDownloads(initList);
-    setDelayInSeconds(1);
+    setDelaySec(1);
     onClose();
   };
   return (
@@ -161,13 +161,13 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
             size="small"
             sx={{ mr: 1 }}
             type="number"
-            value={delayInSeconds}
+            value={delaySec}
             onChange={(e) => {
               const value = parseFloat(e.target.value);
               if (!isNaN(value)) {
-                setDelayInSeconds(value);
+                setDelaySec(value);
               } else {
-                setDelayInSeconds(0);
+                setDelaySec(0);
               }
             }}
           />
