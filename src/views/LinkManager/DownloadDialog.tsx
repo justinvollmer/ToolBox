@@ -37,9 +37,14 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   const [downloads, setDownloads] = React.useState(initList);
   const [downloadFolder] = React.useState("./src/downloads");
   const [delaySec, setDelaySec] = React.useState(1);
-  const [isReady, setReady] = React.useState(false);
-  const defaultStatus: string = "Status: Please click on 'Check list' first.";
-  const [statusText, setStatusText] = React.useState(defaultStatus);
+
+  const [isChecked, setChecked] = React.useState(false);
+  const [isEligibleForDownload, setEligibleForDownload] = React.useState(false);
+  const [isLocked, setLocked] = React.useState(false);
+
+  const defaultStatusText: string = "Please click on 'Check list' first.";
+  const [statusText, setStatusText] = React.useState(defaultStatusText);
+  const [statusTextColor, setStatusTextColor] = React.useState("black");
 
   React.useEffect(() => {
     if (open) {
@@ -48,28 +53,48 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   }, [open, initList]);
 
   const handleCheck = () => {
-    const missingFilenameItem = downloads.find(
-      (element) => element.filename === ""
-    );
+    const missingFilenameItem = downloads.find((file) => file.filename === "");
 
     if (missingFilenameItem) {
-      setStatusText("Status: There are entries with missing filenames!");
+      setStatusText("There are entries with missing filenames!");
+      setStatusTextColor("red");
       return;
     } else {
-      setStatusText("Status: Ready to start Download!");
-      setReady(true);
+      setStatusText("Ready to start the download!");
+      setStatusTextColor("green");
+      setChecked(true);
+      setEligibleForDownload(true);
     }
   };
 
-  const handleStartDownload = () => {
-    console.log("Starting download...");
+  const setReady = (isReady: boolean) => {
+    setChecked(isReady);
+    setEligibleForDownload(isReady);
+    setLocked(isReady);
+  };
+
+  const handleStartDownload = async () => {
+    setReady(true);
+
+    setStatusText("Downloading...");
+    setStatusTextColor("orange");
 
     const strippedDownloads = downloads.map(
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       ({ progress, ...rest }) => rest
     );
 
-    downloadFromList(strippedDownloads, downloadFolder, delaySec);
+    try {
+      await downloadFromList(strippedDownloads, downloadFolder, delaySec);
+
+      setStatusText("Download finished successfully");
+      setStatusTextColor("green");
+    } catch (error) {
+      setStatusText("Download failed");
+      setStatusTextColor("red");
+    }
+
+    setReady(false);
   };
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -94,8 +119,9 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   const onCancel = () => {
     setDownloads(initList);
     setDelaySec(1);
+    setStatusText(defaultStatusText);
+    setStatusTextColor("black");
     setReady(false);
-    setStatusText(defaultStatus);
     onClose();
   };
   return (
@@ -142,6 +168,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                         size="small"
                         value={download.filename || ""}
                         placeholder="filename"
+                        disabled={isLocked}
                         onChange={(e) =>
                           handleFilenameChange(
                             download.id,
@@ -157,6 +184,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                         size="small"
                         value={download.filetype || ""}
                         placeholder="jpg"
+                        disabled={isLocked}
                         onChange={(e) =>
                           handleFilenameChange(
                             download.id,
@@ -179,6 +207,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
             label="Interval (seconds/image)"
             size="small"
             sx={{ mr: 1 }}
+            disabled={isLocked}
             type="number"
             value={delaySec}
             onChange={(e) => {
@@ -194,7 +223,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
             variant="outlined"
             onClick={handleCheck}
             sx={{ ml: 1 }}
-            disabled={isReady}
+            disabled={isChecked}
           >
             Check list
           </Button>
@@ -202,7 +231,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
             variant="outlined"
             onClick={handleStartDownload}
             sx={{ ml: 1 }}
-            disabled={!isReady}
+            disabled={!isEligibleForDownload}
           >
             Start Download
           </Button>
@@ -210,8 +239,12 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
             Cancel
           </Button>
         </Box>
-        <Typography variant="body2" sx={{ mt: 2 }}>
-          {statusText}
+        <Typography
+          variant="body2"
+          sx={{ mt: 2, color: statusTextColor }}
+          className="unselectable"
+        >
+          Status: {statusText}
         </Typography>
       </DialogContent>
     </Dialog>
