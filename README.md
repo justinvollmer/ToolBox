@@ -38,4 +38,4 @@ If you are developing a production application, we recommend updating the config
 
 ## License
 
-Link-Manager is released under the [MIT License](https://github.com/justinvollmer/ToolBox/blob/main/LICENSE).
+ToolBox is released under the [MIT License](https://github.com/justinvollmer/ToolBox/blob/main/LICENSE).
