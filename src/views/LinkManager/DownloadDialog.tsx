@@ -45,6 +45,8 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   const [statusText, setStatusText] = React.useState(defaultStatusText);
   const [statusTextColor, setStatusTextColor] = React.useState("black");
 
+  const [preferredFilename, setPreferredFilename] = React.useState("");
+
   React.useEffect(() => {
     if (open) {
       setDownloads(initList);
@@ -111,6 +113,23 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setReady(false);
   };
 
+  const handleSetAllFilenames = () => {
+    const updatedDownloads = downloads.map((file) => ({
+      ...file,
+      filename: preferredFilename,
+    }));
+    setDownloads(updatedDownloads);
+    setPreferredFilename("");
+  };
+
+  const handleClearAllFilenames = () => {
+    const updatedDownloads = downloads.map((file) => ({
+      ...file,
+      filename: "",
+    }));
+    setDownloads(updatedDownloads);
+  };
+
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
@@ -136,6 +155,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setStatusText(defaultStatusText);
     setStatusTextColor("black");
     setReady(false);
+    setPreferredFilename("");
     onClose();
   };
   return (
@@ -259,6 +279,32 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
           </Button>
           <Button variant="outlined" onClick={onCancel} sx={{ ml: 1 }}>
             Cancel
+          </Button>
+        </Box>
+        <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+          <TextField
+            label="New Filename"
+            size="small"
+            sx={{ mr: 1 }}
+            disabled={isLocked}
+            value={preferredFilename}
+            onChange={(e) => setPreferredFilename(e.target.value)}
+          />
+          <Button
+            variant="outlined"
+            sx={{ ml: 1 }}
+            onClick={handleSetAllFilenames}
+            disabled={isLocked || preferredFilename.trim() === ""}
+          >
+            Set Filename for All
+          </Button>
+          <Button
+            variant="outlined"
+            sx={{ ml: 1 }}
+            onClick={handleClearAllFilenames}
+            disabled={isLocked}
+          >
+            Clear All Filenames
           </Button>
         </Box>
         <Typography
