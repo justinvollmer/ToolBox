@@ -1,4 +1,5 @@
-# React + TypeScript + Vite
+# ToolBox v0.1.0
+### React + TypeScript + Vite
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/justinvollmer/Toolbox/blob/main/LICENSE)
 

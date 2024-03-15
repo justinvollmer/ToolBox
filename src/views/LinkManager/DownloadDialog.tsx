@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
 import {
   Box,
@@ -6,6 +7,8 @@ import {
   DialogTitle,
   DialogContent,
   Button,
+  IconButton,
+  InputAdornment,
   Table,
   TableBody,
   TableCell,
@@ -15,6 +18,8 @@ import {
   Typography,
   Paper,
 } from "@mui/material";
+
+import { FolderRounded } from "@mui/icons-material";
 
 import "./LinkManager.scss";
 
@@ -278,7 +283,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
             Start Download
           </Button>
           <Button variant="outlined" onClick={onCancel} sx={{ ml: 1 }}>
-            Cancel
+            Cancel / Exit
           </Button>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
@@ -306,6 +311,24 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
           >
             Clear All Filenames
           </Button>
+        </Box>
+        <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+          <TextField
+            label="Output Folder"
+            size="small"
+            sx={{ mr: 1 }}
+            value={downloadFolder}
+            InputProps={{
+              readOnly: true,
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton disabled={isLocked}>
+                    <FolderRounded />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
         </Box>
         <Typography
           variant="body2"
