@@ -22,7 +22,6 @@ import { Link } from "react-router-dom";
 const pages = [
   { name: "Modules", link: "/" },
   { name: "About", link: "/about" },
-  { name: "Dev", link: "/dev" },
 ];
 
 function Navbar() {
