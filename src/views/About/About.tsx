@@ -8,10 +8,12 @@ function About() {
     <>
       <div className="profile-container unselectable">
         <h1>ToolBox</h1>
-        <p className="role">Pre Release Version</p>
+        <p id="version" className="role">
+          Pre Release Version
+        </p>
         <div className="about">
           <h2>About</h2>
-          <p>ToolBox ist a set of tools build in React + Vite + TypeScript</p>
+          <p>ToolBox ist a set of tools build in React + Vite + TypeScript.</p>
         </div>
       </div>
       <div className="profile-container unselectable">
