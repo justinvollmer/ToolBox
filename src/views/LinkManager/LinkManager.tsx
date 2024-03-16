@@ -26,6 +26,8 @@ import FilterDialog from "./FilterDialog";
 import EncryptionDialog from "./EncryptionDialog";
 import DownloadDialog from "./DownloadDialog";
 
+const { ipcRenderer } = window;
+
 import "./LinkManager.scss";
 
 function LinkManager() {
@@ -168,52 +170,28 @@ function LinkManager() {
   // SECTION - File Import
   const openFileDialog = async () => {
     try {
-      const fileInput = document.createElement("input");
-      fileInput.type = "file";
-      fileInput.accept = ".txt";
-
-      fileInput.addEventListener("change", async (event) => {
-        const file = (event.target as HTMLInputElement)?.files?.[0];
-
-        if (file) {
-          try {
-            const content = await readFileAsync(file);
-            setText(content.trim());
-          } catch (error) {
-            console.error("Error reading file:", error);
-          }
-        }
-      });
-
-      fileInput.click();
+      const content = await ipcRenderer.invoke("open-file-dialog");
+      if (content && content.length > 0) {
+        setText(content.trim());
+      }
     } catch (error) {
       console.error("Error opening file dialog:", error);
     }
   };
-
-  const readFileAsync = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.result instanceof ArrayBuffer) {
-          reject(new Error("Failed to read file as text."));
-        } else {
-          resolve(reader.result as string);
-        }
-      };
-      reader.onerror = (error) => reject(error);
-      reader.readAsText(file);
-    });
-  };
   // !SECTION
 
   // SECTION - File Export
-  const exportFile = () => {
-    const blob = new Blob([text], { type: "text/plain" });
-    const link = document.createElement("a");
-    link.href = URL.createObjectURL(blob);
-    link.download = "file.txt";
-    link.click();
+  const exportFile = async () => {
+    try {
+      const success = await ipcRenderer.invoke("save-file-dialog", text);
+      if (success) {
+        console.log("File saved successfully");
+      } else {
+        console.error("File was not saved");
+      }
+    } catch (error) {
+      console.error("Error exporting file:", error);
+    }
   };
   // !SECTION
 
