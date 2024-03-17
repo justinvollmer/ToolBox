@@ -8,13 +8,20 @@ function isValidDynamicChannelName(channel) {
 
 contextBridge.exposeInMainWorld("ipcRenderer", {
   send: (channel, data) => {
-    let validSendChannels = ["send-message", "download-file"];
+    let validSendChannels = [
+      "send-message",
+      "download-file",
+      "request-cancel-download",
+    ];
     if (validSendChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
     }
   },
   on: (channel, func) => {
-    let validReceiveChannels = ["download-file-list-progress"];
+    let validReceiveChannels = [
+      "download-file-list-progress",
+      "cancel-download",
+    ];
     if (
       validReceiveChannels.includes(channel) ||
       isValidDynamicChannelName(channel)
@@ -36,4 +43,5 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
       ipcRenderer.once(channel, (event, ...args) => func(...args));
     }
   },
+  invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
 });

@@ -25,6 +25,8 @@ import "./LinkManager.scss";
 
 import { downloadFromList } from "../../utils/DownloadManager";
 
+const { ipcRenderer } = window;
+
 interface DownloadDialogProps {
   initList: {
     id: number;
@@ -40,11 +42,12 @@ interface DownloadDialogProps {
 function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   // useState hook to manage downloads state
   const [downloads, setDownloads] = React.useState(initList);
-  const [downloadFolder] = React.useState("./src/downloads");
+  const [downloadFolder, setDownloadFolder] = React.useState("");
   const [delaySec, setDelaySec] = React.useState(1);
 
   const [isEligibleForDownload, setEligibleForDownload] = React.useState(false);
   const [isLocked, setLocked] = React.useState(false);
+  const [isDownloading, setDownloadingState] = React.useState(false);
 
   const defaultStatusText: string = "Please click on 'Check list' first.";
   const [statusText, setStatusText] = React.useState(defaultStatusText);
@@ -64,6 +67,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     const illegalFilenameItem = downloads.find((file) =>
       illegalCharsPattern.test(file.filename)
     );
+    const folderPath = /^(([a-zA-Z]:\\)|\/)?([\w .-]+\\?\/?)+$/;
 
     if (missingFilenameItem) {
       setStatusText("There are entries with missing filenames!");
@@ -73,6 +77,10 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
       setStatusText(
         "There are entries with illegal characters in their filenames!"
       );
+      setStatusTextColor("red");
+      return;
+    } else if (!downloadFolder || !folderPath.test(downloadFolder)) {
+      setStatusText("The download folder is empty or invalid!");
       setStatusTextColor("red");
       return;
     } else {
@@ -96,6 +104,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   const handleStartDownload = async () => {
     setReady(true);
     setEligibleForDownload(false);
+    setDownloadingState(true);
 
     setStatusText("Downloading...");
     setStatusTextColor("orange");
@@ -116,6 +125,12 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     }
 
     setReady(false);
+    setDownloadingState(false);
+  };
+
+  const handleStopDownload = () => {
+    ipcRenderer.send("request-cancel-download");
+    setDownloadingState(false);
   };
 
   const handleSetAllFilenames = () => {
@@ -133,6 +148,17 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
       filename: "",
     }));
     setDownloads(updatedDownloads);
+  };
+
+  const handleChooseDownloadFolder = async () => {
+    try {
+      const folderPath = await ipcRenderer.invoke("open-directory-dialog");
+      if (folderPath) {
+        setDownloadFolder(folderPath);
+      }
+    } catch (error) {
+      console.error("Failed to open directory dialog:", error);
+    }
   };
 
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
@@ -154,19 +180,20 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setDownloads(updatedDownloads);
   };
 
-  const onCancel = () => {
+  const onQuit = () => {
     setDownloads(initList);
     setDelaySec(1);
     setStatusText(defaultStatusText);
     setStatusTextColor("black");
     setReady(false);
     setPreferredFilename("");
+    setDownloadFolder("");
     onClose();
   };
   return (
     <Dialog
       open={open}
-      onClose={onCancel}
+      onClose={onQuit}
       onClick={handleBackdropClick}
       maxWidth="xl"
       fullWidth
@@ -271,19 +298,38 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
           )}
           {!isLocked && (
             <Button variant="outlined" onClick={handleCheck} sx={{ ml: 1 }}>
-              Check list
+              Check & lock list
+            </Button>
+          )}
+          {!isDownloading && (
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleStartDownload}
+              sx={{ ml: 1 }}
+              disabled={!isEligibleForDownload}
+            >
+              Start Download
+            </Button>
+          )}
+          {isDownloading && (
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={handleStopDownload}
+              sx={{ ml: 1 }}
+            >
+              Stop Download
             </Button>
           )}
           <Button
             variant="outlined"
-            onClick={handleStartDownload}
+            color="error"
+            onClick={onQuit}
             sx={{ ml: 1 }}
-            disabled={!isEligibleForDownload}
+            disabled={isLocked}
           >
-            Start Download
-          </Button>
-          <Button variant="outlined" onClick={onCancel} sx={{ ml: 1 }}>
-            Cancel / Exit
+            Quit
           </Button>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
@@ -314,15 +360,19 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
           <TextField
-            label="Output Folder"
+            label="Download Folder"
             size="small"
             sx={{ mr: 1 }}
             value={downloadFolder}
+            disabled={isLocked}
             InputProps={{
               readOnly: true,
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton disabled={isLocked}>
+                  <IconButton
+                    disabled={isLocked}
+                    onClick={handleChooseDownloadFolder}
+                  >
                     <FolderRounded />
                   </IconButton>
                 </InputAdornment>

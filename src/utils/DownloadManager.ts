@@ -1,5 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const { ipcRenderer } = window;
+let isCancelled = false;
+
+ipcRenderer.on("cancel-download", () => {
+  isCancelled = true;
+});
+
+function resetCancellation() {
+  isCancelled = false;
+}
 
 async function download(
   url: string,
@@ -34,6 +43,10 @@ async function downloadFromList(
   delaySec: number
 ): Promise<void> {
   for (let i = 0; i < urlList.length; i++) {
+    if (isCancelled) {
+      break;
+    }
+
     const file = urlList[i];
     await new Promise<void>((resolve, reject) => {
       // Listen for the success or error of the current download
@@ -62,6 +75,9 @@ async function downloadFromList(
         errorEvent,
       });
     });
+  }
+  if (isCancelled) {
+    resetCancellation();
   }
 }
 

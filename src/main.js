@@ -1,8 +1,10 @@
 /* eslint-disable */
-const { app, BrowserWindow, Menu, ipcMain } = require("electron");
+const { app, BrowserWindow, Menu, ipcMain, dialog } = require("electron");
 const axios = require("axios");
 const fs = require("fs");
+const { readFile, writeFile } = require("fs").promises;
 const path = require("path");
+const os = require("os");
 
 // modify your existing createWindow() function
 const createMainWindow = () => {
@@ -99,3 +101,48 @@ ipcMain.on(
     }
   }
 );
+
+ipcMain.handle("open-file-dialog", async (event) => {
+  const { filePaths } = await dialog.showOpenDialog({
+    properties: ["openFile"],
+    filters: [{ name: "Text Files", extensions: ["txt"] }],
+    defaultPath: path.join(os.homedir(), "Desktop"),
+  });
+  if (filePaths.length > 0) {
+    const content = await readFile(filePaths[0], "utf8");
+    return content;
+  }
+  return "";
+});
+
+ipcMain.handle("save-file-dialog", async (event, content) => {
+  const { filePath } = await dialog.showSaveDialog({
+    buttonLabel: "Save text",
+    filters: [{ name: "Text Files", extensions: ["txt"] }],
+    defaultPath: path.join(os.homedir(), "Desktop", "file.txt"),
+  });
+
+  if (filePath) {
+    await writeFile(filePath, content);
+    return true; // Success
+  } else {
+    return false; // User cancelled the dialog or an error occurred
+  }
+});
+
+ipcMain.handle("open-directory-dialog", async () => {
+  const { filePaths } = await dialog.showOpenDialog({
+    properties: ["openDirectory"],
+    defaultPath: path.join(os.homedir(), "Desktop"),
+  });
+
+  if (filePaths.length > 0) {
+    return filePaths[0];
+  } else {
+    return ""; // If no directory was selected
+  }
+});
+
+ipcMain.on("request-cancel-download", (event) => {
+  event.sender.send("cancel-download");
+});
