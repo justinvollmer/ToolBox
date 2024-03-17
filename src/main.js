@@ -142,3 +142,7 @@ ipcMain.handle("open-directory-dialog", async () => {
     return ""; // If no directory was selected
   }
 });
+
+ipcMain.on("request-cancel-download", (event) => {
+  event.sender.send("cancel-download");
+});

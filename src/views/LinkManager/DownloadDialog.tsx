@@ -47,6 +47,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
 
   const [isEligibleForDownload, setEligibleForDownload] = React.useState(false);
   const [isLocked, setLocked] = React.useState(false);
+  const [isDownloading, setDownloadingState] = React.useState(false);
 
   const defaultStatusText: string = "Please click on 'Check list' first.";
   const [statusText, setStatusText] = React.useState(defaultStatusText);
@@ -103,6 +104,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   const handleStartDownload = async () => {
     setReady(true);
     setEligibleForDownload(false);
+    setDownloadingState(true);
 
     setStatusText("Downloading...");
     setStatusTextColor("orange");
@@ -123,6 +125,12 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     }
 
     setReady(false);
+    setDownloadingState(false);
+  };
+
+  const handleStopDownload = () => {
+    ipcRenderer.send("request-cancel-download");
+    setDownloadingState(false);
   };
 
   const handleSetAllFilenames = () => {
@@ -172,7 +180,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setDownloads(updatedDownloads);
   };
 
-  const onCancel = () => {
+  const onQuit = () => {
     setDownloads(initList);
     setDelaySec(1);
     setStatusText(defaultStatusText);
@@ -185,7 +193,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   return (
     <Dialog
       open={open}
-      onClose={onCancel}
+      onClose={onQuit}
       onClick={handleBackdropClick}
       maxWidth="xl"
       fullWidth
@@ -290,19 +298,38 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
           )}
           {!isLocked && (
             <Button variant="outlined" onClick={handleCheck} sx={{ ml: 1 }}>
-              Check list
+              Check & lock list
+            </Button>
+          )}
+          {!isDownloading && (
+            <Button
+              variant="contained"
+              color="success"
+              onClick={handleStartDownload}
+              sx={{ ml: 1 }}
+              disabled={!isEligibleForDownload}
+            >
+              Start Download
+            </Button>
+          )}
+          {isDownloading && (
+            <Button
+              variant="outlined"
+              color="error"
+              onClick={handleStopDownload}
+              sx={{ ml: 1 }}
+            >
+              Stop Download
             </Button>
           )}
           <Button
             variant="outlined"
-            onClick={handleStartDownload}
+            color="error"
+            onClick={onQuit}
             sx={{ ml: 1 }}
-            disabled={!isEligibleForDownload}
+            disabled={isLocked}
           >
-            Start Download
-          </Button>
-          <Button variant="outlined" onClick={onCancel} sx={{ ml: 1 }}>
-            Cancel / Exit
+            Quit
           </Button>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
