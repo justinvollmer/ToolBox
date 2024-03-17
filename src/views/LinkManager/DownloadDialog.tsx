@@ -25,6 +25,8 @@ import "./LinkManager.scss";
 
 import { downloadFromList } from "../../utils/DownloadManager";
 
+const { ipcRenderer } = window;
+
 interface DownloadDialogProps {
   initList: {
     id: number;
@@ -40,7 +42,7 @@ interface DownloadDialogProps {
 function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   // useState hook to manage downloads state
   const [downloads, setDownloads] = React.useState(initList);
-  const [downloadFolder] = React.useState("./src/downloads");
+  const [downloadFolder, setDownloadFolder] = React.useState("");
   const [delaySec, setDelaySec] = React.useState(1);
 
   const [isEligibleForDownload, setEligibleForDownload] = React.useState(false);
@@ -64,6 +66,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     const illegalFilenameItem = downloads.find((file) =>
       illegalCharsPattern.test(file.filename)
     );
+    const folderPath = /^(([a-zA-Z]:\\)|\/)?([\w .-]+\\?\/?)+$/;
 
     if (missingFilenameItem) {
       setStatusText("There are entries with missing filenames!");
@@ -73,6 +76,10 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
       setStatusText(
         "There are entries with illegal characters in their filenames!"
       );
+      setStatusTextColor("red");
+      return;
+    } else if (!downloadFolder || !folderPath.test(downloadFolder)) {
+      setStatusText("The download folder is empty or invalid!");
       setStatusTextColor("red");
       return;
     } else {
@@ -135,6 +142,17 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setDownloads(updatedDownloads);
   };
 
+  const handleChooseDownloadFolder = async () => {
+    try {
+      const folderPath = await ipcRenderer.invoke("open-directory-dialog");
+      if (folderPath) {
+        setDownloadFolder(folderPath);
+      }
+    } catch (error) {
+      console.error("Failed to open directory dialog:", error);
+    }
+  };
+
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
@@ -161,6 +179,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setStatusTextColor("black");
     setReady(false);
     setPreferredFilename("");
+    setDownloadFolder("");
     onClose();
   };
   return (
@@ -314,15 +333,19 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
           <TextField
-            label="Output Folder"
+            label="Download Folder"
             size="small"
             sx={{ mr: 1 }}
             value={downloadFolder}
+            disabled={isLocked}
             InputProps={{
               readOnly: true,
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton disabled={isLocked}>
+                  <IconButton
+                    disabled={isLocked}
+                    onClick={handleChooseDownloadFolder}
+                  >
                     <FolderRounded />
                   </IconButton>
                 </InputAdornment>

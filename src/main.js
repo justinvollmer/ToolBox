@@ -129,3 +129,16 @@ ipcMain.handle("save-file-dialog", async (event, content) => {
     return false; // User cancelled the dialog or an error occurred
   }
 });
+
+ipcMain.handle("open-directory-dialog", async () => {
+  const { filePaths } = await dialog.showOpenDialog({
+    properties: ["openDirectory"],
+    defaultPath: path.join(os.homedir(), "Desktop"),
+  });
+
+  if (filePaths.length > 0) {
+    return filePaths[0];
+  } else {
+    return ""; // If no directory was selected
+  }
+});
