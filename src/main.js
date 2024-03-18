@@ -23,9 +23,10 @@ const createMainWindow = () => {
   const applicationMenu = Menu.buildFromTemplate(applicaitonMenuItems);
   Menu.setApplicationMenu(applicationMenu);
 
-  win.loadURL("http://localhost:5173/");
+  win.loadURL("http://localhost:5173/"); // NOTE - For development
+  //win.loadFile(path.join(__dirname, "../dist/index.html")); // NOTE - For manual distribution
 
-  // NOTE: Always enable DevTools on startup
+  // To always open DevTools on startup
   //win.webContents.openDevTools();
 };
 
