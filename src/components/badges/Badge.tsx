@@ -6,6 +6,8 @@ import Modal from "@mui/material/Modal";
 
 import "./Badge.scss";
 
+import { Link } from "react-router-dom";
+
 interface Props {
   title: string;
   description: string;
@@ -44,9 +46,9 @@ function Badge({
 
   if (learnMoreLink !== undefined) {
     learnMoreElement = (
-      <a className="links" target={learnMoreTarget} href={learnMoreLink}>
+      <Link className="links" target={learnMoreTarget} to={learnMoreLink}>
         Learn more
-      </a>
+      </Link>
     );
   }
 
