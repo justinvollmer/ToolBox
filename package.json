@@ -4,6 +4,10 @@
   "version": "0.1.0",
   "type": "commonjs",
   "main": "src/main.js",
+  "build": {
+    "appId": "toolbox",
+    "productName": "ToolBox"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -20,7 +24,6 @@
     "@types/node": "^20.10.4",
     "axios": "^1.6.2",
     "is-electron": "^2.2.2",
-    "lodash": "^4.17.21",
     "node-sass": "^9.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -30,7 +33,6 @@
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
-    "@types/lodash": "^4.14.201",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.0.0",
