@@ -13,7 +13,7 @@ function LeadDeveloper() {
       description={description}
       icon={<DevIcon />}
       iconColor="#1DA1F2"
-      learnMoreLink="/About"
+      learnMoreLink="/about"
     />
   );
 }
