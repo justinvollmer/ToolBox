@@ -1,3 +1,5 @@
+// Badge.scss
+
 @import '../../utils/default';
 
 .clickable {
@@ -15,6 +17,15 @@
   @include vendorPrefix(user-select, none);
 }
   
-.links:visited {
-  color: blue;
+.links_dark {
+  color: #2b89c1; // Using CSS variable for dynamic theming
+}
+
+// Assuming .badge-text represents the text in your badge
+.badge-text {
+  color: var(--text-primary); // Dynamically apply text color based on theme
+}
+
+.badge-content { // Ensure this class or similar is actually used in your Badge JSX
+  color: var(--text-primary); // Applying the text color based on theme
 }
