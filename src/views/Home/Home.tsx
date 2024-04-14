@@ -24,30 +24,10 @@ function LinkManagerCard() {
   );
 }
 
-function GalleryCard() {
-  const title = "Gallery";
-  const description = "WORK IN PROGRESS! Name may not be final!";
-  const moduleLink = "/gallery";
-  const info = "WORK IN PROGRESS! Name may not be final!";
-
-  return (
-    <ModuleCard
-      title={title}
-      description={description}
-      moduleLink={moduleLink}
-      info={info}
-      released={false}
-      mainDeveloper="Justin Vollmer"
-      mainDeveloperBadge={<LeadDeveloper />}
-    />
-  );
-}
-
 function Home() {
   return (
     <div className="main-container">
       <LinkManagerCard />
-      <GalleryCard />
     </div>
   );
 }
