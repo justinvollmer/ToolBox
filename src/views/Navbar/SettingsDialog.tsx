@@ -1,14 +1,65 @@
 import * as React from "react";
-import { Dialog, DialogTitle } from "@mui/material";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Tabs,
+  Tab,
+  Typography,
+} from "@mui/material";
 
 import "./SettingsDialog.scss";
 
-interface Props {
+interface SettingsTabProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function SettingsTabPanel({
+  children,
+  index,
+  value,
+  ...other
+}: SettingsTabProps) {
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Typography>{children}</Typography>
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    "aria-controls": `simple-tabpanel-${index}`,
+  };
+}
+
+interface SettingsDialogProps {
   open: boolean;
   onClose: () => void;
 }
 
-function SettingsDialog({ open, onClose }: Props) {
+function SettingsDialog({ open, onClose }: SettingsDialogProps) {
+  const [value, setValue] = React.useState(0);
+
+  const handleTabChange = (_event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
@@ -22,6 +73,34 @@ function SettingsDialog({ open, onClose }: Props) {
       fullWidth
     >
       <DialogTitle className="unselectable">Settings</DialogTitle>
+      <DialogContent>
+        <Box
+          sx={{
+            maxHeight: "60vh",
+            overflow: "auto",
+            display: "flex",
+          }}
+        >
+          <Tabs
+            value={value}
+            onChange={handleTabChange}
+            aria-label="basic tabs example"
+            orientation="vertical"
+            variant="scrollable"
+          >
+            <Tab label="General" {...a11yProps(0)} />
+            <Tab label="Appearance" {...a11yProps(1)} />
+          </Tabs>
+
+          <SettingsTabPanel value={value} index={0}>
+            General Tab
+          </SettingsTabPanel>
+          <SettingsTabPanel value={value} index={1}>
+            Appearance Tab
+          </SettingsTabPanel>
+        </Box>
+      </DialogContent>
+      <Button onClick={onClose}>Close</Button>
     </Dialog>
   );
 }
