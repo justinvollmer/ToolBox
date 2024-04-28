@@ -79,7 +79,7 @@ function GeneralSettingsTab() {
         <TextField
           label="Default Download Folder"
           size="small"
-          sx={{ mr: 1 }}
+          sx={{ mr: 1, width: "500px" }}
           value={downloadFolder}
           InputProps={{
             readOnly: true,

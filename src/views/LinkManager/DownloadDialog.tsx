@@ -39,7 +39,6 @@ interface DownloadDialogProps {
 }
 
 function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
-  // useState hook to manage downloads state
   const [downloads, setDownloads] = React.useState(initList);
   const [downloadFolder, setDownloadFolder] = React.useState("");
   const [delaySec, setDelaySec] = React.useState(1);
