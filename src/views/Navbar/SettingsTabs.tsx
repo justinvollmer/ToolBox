@@ -10,36 +10,93 @@ import {
   Switch,
   FormGroup,
   FormControlLabel,
+  TextField,
+  IconButton,
+  InputAdornment,
 } from "@mui/material";
+import { FolderRounded, DeleteRounded } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import { ThemeContext } from "../../components/theme/ThemeContext";
+
+const { ipcRenderer } = window;
 
 import "./Settings.scss";
 
 function GeneralSettingsTab() {
   const [language, setLanguage] = React.useState("en");
+  const [downloadFolder, setDownloadFolder] = React.useState("");
+
+  React.useEffect(() => {
+    ipcRenderer
+      .invoke("get-setting", "defaultDownloadFolder")
+      .then((storedFolder: string) => {
+        if (storedFolder) {
+          setDownloadFolder(storedFolder);
+        }
+      });
+  }, []);
 
   const handleChange = (event: SelectChangeEvent) => {
     setLanguage(event.target.value);
   };
 
+  const handleChooseDownloadFolder = async () => {
+    try {
+      const folderPath = await ipcRenderer.invoke("open-directory-dialog");
+      if (folderPath) {
+        setDownloadFolder(folderPath);
+        ipcRenderer.invoke("set-setting", "defaultDownloadFolder", folderPath);
+      }
+    } catch (error) {
+      console.error("Failed to open directory dialog:", error);
+    }
+  };
+
+  const handleClearDownloadFolder = async () => {
+    setDownloadFolder("");
+    ipcRenderer.invoke("delete-setting", "defaultDownloadFolder");
+  };
+
   return (
-    <Box sx={{ minWidth: 120 }}>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Language</InputLabel>
-        <Select
-          labelId="demo-simple-select-label"
-          id="demo-simple-select"
-          value={language}
-          label="Language"
-          onChange={handleChange}
-          disabled
-        >
-          <MenuItem value={"en"}>EN</MenuItem>
-          <MenuItem value={"de"}>DE</MenuItem>
-        </Select>
-      </FormControl>
-    </Box>
+    <>
+      <Box sx={{ minWidth: 120, marginBottom: "10px" }}>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Language</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={language}
+            label="Language"
+            onChange={handleChange}
+            disabled
+          >
+            <MenuItem value={"en"}>EN</MenuItem>
+            <MenuItem value={"de"}>DE</MenuItem>
+          </Select>
+        </FormControl>
+      </Box>
+      <Box>
+        <TextField
+          label="Download Folder"
+          size="small"
+          sx={{ mr: 1 }}
+          value={downloadFolder}
+          InputProps={{
+            readOnly: true,
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={handleChooseDownloadFolder}>
+                  <FolderRounded />
+                </IconButton>
+                <IconButton onClick={handleClearDownloadFolder}>
+                  <DeleteRounded />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
+    </>
   );
 }
 

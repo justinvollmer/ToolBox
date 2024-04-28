@@ -19,7 +19,7 @@ import {
   Paper,
 } from "@mui/material";
 
-import { FolderRounded } from "@mui/icons-material";
+import { FolderRounded, DeleteRounded } from "@mui/icons-material";
 
 import "./LinkManager.scss";
 
@@ -59,6 +59,22 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
       setDownloads(initList);
     }
   }, [open, initList]);
+
+  const resetToDefaultDownloadfolder = () => {
+    ipcRenderer
+      .invoke("get-setting", "defaultDownloadFolder")
+      .then((storedFolder: string) => {
+        if (storedFolder) {
+          setDownloadFolder(storedFolder);
+        } else {
+          setDownloadFolder("");
+        }
+      });
+  };
+
+  React.useEffect(() => {
+    resetToDefaultDownloadfolder();
+  }, []);
 
   const handleCheck = () => {
     const missingFilenameItem = downloads.find((file) => file.filename === "");
@@ -155,6 +171,10 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     }
   };
 
+  const handleClearDownloadFolder = () => {
+    setDownloadFolder("");
+  };
+
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
@@ -181,7 +201,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setStatusTextColor("black");
     setReady(false);
     setPreferredFilename("");
-    setDownloadFolder("");
+    resetToDefaultDownloadfolder();
     onClose();
   };
   return (
@@ -365,6 +385,12 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                     onClick={handleChooseDownloadFolder}
                   >
                     <FolderRounded />
+                  </IconButton>
+                  <IconButton
+                    disabled={isLocked}
+                    onClick={handleClearDownloadFolder}
+                  >
+                    <DeleteRounded />
                   </IconButton>
                 </InputAdornment>
               ),

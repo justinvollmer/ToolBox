@@ -48,4 +48,5 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
   getSetting: async (key) => ipcRenderer.invoke("get-setting", key),
   setSetting: async (key, value) =>
     ipcRenderer.invoke("set-setting", key, value),
+  deleteSetting: async (key) => ipcRenderer.invoke("delete-setting", key),
 });

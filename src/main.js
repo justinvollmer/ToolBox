@@ -60,8 +60,8 @@ ipcMain.handle("set-setting", (event, key, value) => {
   store.set(key, value);
 });
 
-ipcMain.on("send-message", (event, message) => {
-  console.log("Message received:", message);
+ipcMain.handle("delete-setting", (event, key) => {
+  return store.delete(key);
 });
 
 ipcMain.on(
