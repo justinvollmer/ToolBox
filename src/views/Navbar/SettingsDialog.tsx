@@ -13,7 +13,11 @@ import {
 
 import "./Settings.scss";
 
-import { GeneralSettingsTab, AppearanceSettingsTab } from "./SettingsTabs";
+import {
+  GeneralSettingsTab,
+  AppearanceSettingsTab,
+  EncryptionSettingsTab,
+} from "./SettingsTabs";
 
 interface SettingsTabProps {
   children?: React.ReactNode;
@@ -98,6 +102,7 @@ function SettingsDialog({ open, onClose }: SettingsDialogProps) {
           >
             <Tab label="General" {...a11yProps(0)} />
             <Tab label="Appearance" {...a11yProps(1)} />
+            <Tab label="Encryption" {...a11yProps(2)} />
           </Tabs>
 
           <SettingsTabPanel value={value} index={0}>
@@ -105,6 +110,9 @@ function SettingsDialog({ open, onClose }: SettingsDialogProps) {
           </SettingsTabPanel>
           <SettingsTabPanel value={value} index={1}>
             <AppearanceSettingsTab />
+          </SettingsTabPanel>
+          <SettingsTabPanel value={value} index={2}>
+            <EncryptionSettingsTab />
           </SettingsTabPanel>
         </Box>
         <DialogActions sx={{ display: "flex", justifyContent: "end" }}>

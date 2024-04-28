@@ -14,7 +14,7 @@ import {
   IconButton,
   InputAdornment,
 } from "@mui/material";
-import { FolderRounded, DeleteRounded } from "@mui/icons-material";
+import { FolderRounded, DeleteRounded, SaveRounded } from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import { ThemeContext } from "../../components/theme/ThemeContext";
 
@@ -77,7 +77,7 @@ function GeneralSettingsTab() {
       </Box>
       <Box>
         <TextField
-          label="Download Folder"
+          label="Default Download Folder"
           size="small"
           sx={{ mr: 1 }}
           value={downloadFolder}
@@ -173,4 +173,57 @@ function AppearanceSettingsTab() {
   );
 }
 
-export { GeneralSettingsTab, AppearanceSettingsTab };
+function EncryptionSettingsTab() {
+  const [encryptionKey, setEncryptionKey] = React.useState("");
+
+  React.useEffect(() => {
+    ipcRenderer
+      .invoke("get-setting", "defaultEncryptionKey")
+      .then((storedKey: string) => {
+        if (storedKey) {
+          setEncryptionKey(storedKey);
+        }
+      });
+  }, []);
+
+  const handleEncryptionKeyChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setEncryptionKey(event.target.value);
+  };
+
+  const handleSetEncryptionKey = () => {
+    ipcRenderer.invoke("set-setting", "defaultEncryptionKey", encryptionKey);
+  };
+
+  const handleClearEncryptionKey = () => {
+    setEncryptionKey("");
+    ipcRenderer.invoke("delete-setting", "defaultEncryptionKey");
+  };
+
+  return (
+    <Box>
+      <TextField
+        label="Default Encryption Key"
+        size="small"
+        sx={{ mr: 1, width: "500px" }}
+        value={encryptionKey}
+        onChange={handleEncryptionKeyChange}
+        InputProps={{
+          endAdornment: (
+            <InputAdornment position="end">
+              <IconButton onClick={handleSetEncryptionKey}>
+                <SaveRounded />
+              </IconButton>
+              <IconButton onClick={handleClearEncryptionKey}>
+                <DeleteRounded />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
+    </Box>
+  );
+}
+
+export { GeneralSettingsTab, AppearanceSettingsTab, EncryptionSettingsTab };

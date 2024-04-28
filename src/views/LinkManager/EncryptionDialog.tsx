@@ -21,6 +21,8 @@ import {
   generateCryptoKey,
 } from "../../utils/Encryption";
 
+const { ipcRenderer } = window;
+
 import "./LinkManager.scss";
 
 interface EncryptionProps {
@@ -35,9 +37,31 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
   const [key, setKey] = React.useState("");
   const [savingAbility, setSavingDisabled] = React.useState(true);
 
+  React.useEffect(() => {
+    ipcRenderer
+      .invoke("get-setting", "defaultEncryptionKey")
+      .then((storedKey: string) => {
+        if (storedKey) {
+          setKey(storedKey);
+        }
+      });
+  }, []);
+
+  const resetToDefaultKey = () => {
+    ipcRenderer
+      .invoke("get-setting", "defaultEncryptionKey")
+      .then((storedKey: string) => {
+        if (storedKey) {
+          setKey(storedKey);
+        } else {
+          setKey("");
+        }
+      });
+  };
+
   const handleClose = () => {
     onClose();
-    setKey("");
+    resetToDefaultKey();
     setTranslatedText("");
     setSavingDisabled(true);
   };
