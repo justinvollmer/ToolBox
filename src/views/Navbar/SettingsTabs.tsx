@@ -11,6 +11,8 @@ import {
   FormGroup,
   FormControlLabel,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
+import { ThemeContext } from "../../components/theme/ThemeContext";
 
 import "./Settings.scss";
 
@@ -42,6 +44,18 @@ function GeneralSettingsTab() {
 }
 
 function AppearanceSettingsTab() {
+  const theme = useTheme();
+  const { toggleTheme } = React.useContext(ThemeContext);
+
+  const initThemeValue: boolean = theme.palette.mode === "dark" ? true : false;
+  const [themeSwitchState, setThemeSwitchState] =
+    React.useState<boolean>(initThemeValue);
+
+  const handleThemeSwitch = () => {
+    setThemeSwitchState(!themeSwitchState);
+    toggleTheme();
+  };
+
   const MaterialUISwitch = styled(Switch)(({ theme }) => ({
     width: 62,
     height: 34,
@@ -95,6 +109,8 @@ function AppearanceSettingsTab() {
       <FormControlLabel
         control={<MaterialUISwitch sx={{ m: 1 }} />}
         label="Theme <Light | Dark>"
+        checked={themeSwitchState}
+        onChange={handleThemeSwitch}
       />
     </FormGroup>
   );
