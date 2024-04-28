@@ -5,12 +5,15 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  DialogActions,
   Tabs,
   Tab,
   Typography,
 } from "@mui/material";
 
-import "./SettingsDialog.scss";
+import "./Settings.scss";
+
+import { GeneralSettingsTab, AppearanceSettingsTab } from "./SettingsTabs";
 
 interface SettingsTabProps {
   children?: React.ReactNode;
@@ -64,6 +67,11 @@ function SettingsDialog({ open, onClose }: SettingsDialogProps) {
     event.stopPropagation();
   };
 
+  const handleClose = () => {
+    setValue(0);
+    onClose();
+  };
+
   return (
     <Dialog
       open={open}
@@ -93,14 +101,18 @@ function SettingsDialog({ open, onClose }: SettingsDialogProps) {
           </Tabs>
 
           <SettingsTabPanel value={value} index={0}>
-            General Tab
+            <GeneralSettingsTab />
           </SettingsTabPanel>
           <SettingsTabPanel value={value} index={1}>
-            Appearance Tab
+            <AppearanceSettingsTab />
           </SettingsTabPanel>
         </Box>
+        <DialogActions sx={{ display: "flex", justifyContent: "end" }}>
+          <Button variant="contained" onClick={handleClose}>
+            Close
+          </Button>
+        </DialogActions>
       </DialogContent>
-      <Button onClick={onClose}>Close</Button>
     </Dialog>
   );
 }
