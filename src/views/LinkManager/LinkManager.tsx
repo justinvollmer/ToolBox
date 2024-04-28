@@ -2,10 +2,16 @@
 import * as React from "react";
 import {
   Box,
+  Button,
   Backdrop,
   SpeedDial,
   SpeedDialAction,
   TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
 } from "@mui/material";
 
 import {
@@ -37,6 +43,8 @@ function LinkManager() {
 
   const [text, setText] = React.useState(defaultValue);
   const [textPriorChange, setTextPriorChange] = React.useState(defaultValue);
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
+  const [draggedText, setDraggedText] = React.useState("");
 
   const handleTextChange = (event: {
     target: { value: React.SetStateAction<string> };
@@ -45,6 +53,27 @@ function LinkManager() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const handleConfirmClose = () => setConfirmOpen(false);
+  const handleDragOver = (event: React.DragEvent) => {
+    event.preventDefault();
+  };
+  const handleDrop = (event: React.DragEvent) => {
+    event.preventDefault();
+    const file = event.dataTransfer.files[0];
+    if (file && file.type === "text/plain") {
+      const reader = new FileReader();
+      reader.onload = (loadEvent) => {
+        setDraggedText((loadEvent.target?.result as string).trim());
+        setConfirmOpen(true);
+      };
+      reader.readAsText(file);
+    }
+  };
+  const handleConfirmReplace = () => {
+    setText(draggedText);
+    setConfirmOpen(false);
+  };
   // !SECTION
 
   // SECTION - Editor Modes
@@ -329,7 +358,23 @@ function LinkManager() {
             }}
             value={text}
             onChange={handleTextChange}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
           />
+          <Dialog open={confirmOpen} onClose={handleConfirmClose}>
+            <DialogTitle>Confirm Replacement</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Are you sure you want to replace the current content?
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleConfirmClose}>Cancel</Button>
+              <Button onClick={handleConfirmReplace} color="primary" autoFocus>
+                Replace
+              </Button>
+            </DialogActions>
+          </Dialog>
         </div>
         <Backdrop open={open} />
         {!editMode && (

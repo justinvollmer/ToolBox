@@ -12,6 +12,7 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
       "send-message",
       "download-file",
       "request-cancel-download",
+      "set-setting",
     ];
     if (validSendChannels.includes(channel)) {
       ipcRenderer.send(channel, data);
@@ -44,4 +45,8 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
     }
   },
   invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
+  getSetting: async (key) => ipcRenderer.invoke("get-setting", key),
+  setSetting: async (key, value) =>
+    ipcRenderer.invoke("set-setting", key, value),
+  deleteSetting: async (key) => ipcRenderer.invoke("delete-setting", key),
 });

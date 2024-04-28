@@ -3,6 +3,7 @@ import { Tooltip } from "@mui/material";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
+import { useTheme } from "@mui/material/styles";
 
 import "./Badge.scss";
 
@@ -38,6 +39,8 @@ function Badge({
   learnMoreLink,
   learnMoreTarget,
 }: Props) {
+  const theme = useTheme();
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -45,8 +48,16 @@ function Badge({
   let learnMoreElement: JSX.Element | undefined = undefined;
 
   if (learnMoreLink !== undefined) {
+    let appliedClass = "";
+    if (theme.palette.mode === "dark") {
+      appliedClass = "links_dark";
+    }
     learnMoreElement = (
-      <Link className="links" target={learnMoreTarget} to={learnMoreLink}>
+      <Link
+        className={appliedClass}
+        target={learnMoreTarget}
+        to={learnMoreLink}
+      >
         Learn more
       </Link>
     );
@@ -71,7 +82,7 @@ function Badge({
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            <div>
+            <div style={{ color: theme.palette.text.primary }}>
               <span
                 style={{ color: iconColor }}
                 className="adjust-badge-icon-modal"
@@ -83,7 +94,10 @@ function Badge({
               </span>
             </div>
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <Typography
+            id="modal-modal-description"
+            sx={{ mt: 2, color: theme.palette.text.primary }}
+          >
             <span className="unselectable">{description} </span>
             {learnMoreElement}
           </Typography>

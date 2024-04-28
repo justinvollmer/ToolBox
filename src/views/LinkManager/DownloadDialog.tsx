@@ -19,7 +19,7 @@ import {
   Paper,
 } from "@mui/material";
 
-import { FolderRounded } from "@mui/icons-material";
+import { FolderRounded, DeleteRounded } from "@mui/icons-material";
 
 import "./LinkManager.scss";
 
@@ -33,14 +33,12 @@ interface DownloadDialogProps {
     url: string;
     filename: string;
     filetype: string;
-    progress: string;
   }[];
   open: boolean;
   onClose: () => void;
 }
 
 function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
-  // useState hook to manage downloads state
   const [downloads, setDownloads] = React.useState(initList);
   const [downloadFolder, setDownloadFolder] = React.useState("");
   const [delaySec, setDelaySec] = React.useState(1);
@@ -60,6 +58,22 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
       setDownloads(initList);
     }
   }, [open, initList]);
+
+  const resetToDefaultDownloadfolder = () => {
+    ipcRenderer
+      .invoke("get-setting", "defaultDownloadFolder")
+      .then((storedFolder: string) => {
+        if (storedFolder) {
+          setDownloadFolder(storedFolder);
+        } else {
+          setDownloadFolder("");
+        }
+      });
+  };
+
+  React.useEffect(() => {
+    resetToDefaultDownloadfolder();
+  }, []);
 
   const handleCheck = () => {
     const missingFilenameItem = downloads.find((file) => file.filename === "");
@@ -109,13 +123,8 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setStatusText("Downloading...");
     setStatusTextColor("orange");
 
-    const strippedDownloads = downloads.map(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ({ progress, ...rest }) => rest
-    );
-
     try {
-      await downloadFromList(strippedDownloads, downloadFolder, delaySec);
+      await downloadFromList(downloads, downloadFolder, delaySec);
 
       setStatusText("Download finished successfully");
       setStatusTextColor("green");
@@ -161,6 +170,10 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     }
   };
 
+  const handleClearDownloadFolder = () => {
+    setDownloadFolder("");
+  };
+
   const handleBackdropClick = (event: React.MouseEvent<HTMLDivElement>) => {
     event.stopPropagation();
   };
@@ -187,7 +200,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setStatusTextColor("black");
     setReady(false);
     setPreferredFilename("");
-    setDownloadFolder("");
+    resetToDefaultDownloadfolder();
     onClose();
   };
   return (
@@ -216,9 +229,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                   {/* Medium width for filename */}
                   <TableCell sx={{ width: "10%" }} className="unselectable">
                     Filetype
-                  </TableCell>{" "}
-                  {/* Smaller width for filetype */}
-                  <TableCell className="unselectable">Progress</TableCell>
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -267,7 +278,6 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                         fullWidth
                       />
                     </TableCell>
-                    <TableCell>{download.progress}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -374,6 +384,12 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                     onClick={handleChooseDownloadFolder}
                   >
                     <FolderRounded />
+                  </IconButton>
+                  <IconButton
+                    disabled={isLocked}
+                    onClick={handleClearDownloadFolder}
+                  >
+                    <DeleteRounded />
                   </IconButton>
                 </InputAdornment>
               ),

@@ -6,6 +6,7 @@ import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import { Button, CardActionArea, CardActions } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 import { WorkInProgress } from "../badges/BadgeCollection";
 
@@ -51,6 +52,8 @@ function ModuleCard({
   contributors,
   contributorBadge,
 }: Props) {
+  const theme = useTheme();
+
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -150,13 +153,16 @@ function ModuleCard({
       >
         <Box sx={style}>
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            <div>
+            <div style={{ color: theme.palette.text.primary }}>
               <span className="unselectable" style={{ fontWeight: "bold" }}>
                 {title} {assignedBadge}
               </span>
             </div>
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <Typography
+            id="modal-modal-description"
+            sx={{ mt: 2, color: theme.palette.text.primary }}
+          >
             <span className="unselectable">{info}</span>
             {mainDeveloperElement}
           </Typography>

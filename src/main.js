@@ -5,8 +5,11 @@ const fs = require("fs");
 const { readFile, writeFile } = require("fs").promises;
 const path = require("path");
 const os = require("os");
+const Store = require("electron-store");
 
-// modify your existing createWindow() function
+const store = new Store();
+store.clear(); // NOTE - Remove before distribution
+
 const createMainWindow = () => {
   const win = new BrowserWindow({
     title: "ToolBox",
@@ -19,7 +22,8 @@ const createMainWindow = () => {
     },
   });
 
-  const applicaitonMenuItems = [{ role: "fileMenu" }, { role: "viewMenu" }];
+  //const applicaitonMenuItems = [{ role: "fileMenu" }]; // NOTE - For distribution
+  const applicaitonMenuItems = [{ role: "fileMenu" }, { role: "viewMenu" }]; // NOTE - For development
   const applicationMenu = Menu.buildFromTemplate(applicaitonMenuItems);
   Menu.setApplicationMenu(applicationMenu);
 
@@ -28,6 +32,13 @@ const createMainWindow = () => {
 
   // To always open DevTools on startup
   //win.webContents.openDevTools();
+
+  let windowBounds = store.get("windowBounds", { width: 800, height: 600 });
+  win.setBounds(windowBounds);
+
+  win.on("resize", () => {
+    store.set("windowBounds", win.getBounds());
+  });
 };
 
 app.whenReady().then(createMainWindow);
@@ -42,8 +53,16 @@ app.on("activate", () => {
   }
 });
 
-ipcMain.on("send-message", (event, message) => {
-  console.log("Message received:", message);
+ipcMain.handle("get-setting", (event, key) => {
+  return store.get(key);
+});
+
+ipcMain.handle("set-setting", (event, key, value) => {
+  store.set(key, value);
+});
+
+ipcMain.handle("delete-setting", (event, key) => {
+  return store.delete(key);
 });
 
 ipcMain.on(
