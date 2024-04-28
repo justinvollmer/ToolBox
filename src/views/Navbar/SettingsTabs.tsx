@@ -10,7 +10,6 @@ import {
   Switch,
   FormGroup,
   FormControlLabel,
-  Typography,
 } from "@mui/material";
 
 import "./Settings.scss";
@@ -93,10 +92,9 @@ function AppearanceSettingsTab() {
 
   return (
     <FormGroup>
-      <Typography>Theme</Typography>
       <FormControlLabel
         control={<MaterialUISwitch sx={{ m: 1 }} />}
-        label="Theme"
+        label="Theme <Light | Dark>"
       />
     </FormGroup>
   );
