@@ -17,7 +17,7 @@ function LinkManagerCard() {
       description={description}
       moduleLink={moduleLink}
       info={info}
-      released={false}
+      released={true}
       mainDeveloper="Justin Vollmer"
       mainDeveloperBadge={<LeadDeveloper />}
     />

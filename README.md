@@ -1,4 +1,4 @@
-# ToolBox v0.2.0 - Early Alpha Preview Build
+# ToolBox v1.0.0 - Release Build
 ### React + TypeScript + Vite
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/justinvollmer/Toolbox/blob/main/LICENSE)

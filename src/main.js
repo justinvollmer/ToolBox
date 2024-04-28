@@ -22,7 +22,8 @@ const createMainWindow = () => {
     },
   });
 
-  const applicaitonMenuItems = [{ role: "fileMenu" }, { role: "viewMenu" }];
+  //const applicaitonMenuItems = [{ role: "fileMenu" }]; // NOTE - For distribution
+  const applicaitonMenuItems = [{ role: "fileMenu" }, { role: "viewMenu" }]; // NOTE - For development
   const applicationMenu = Menu.buildFromTemplate(applicaitonMenuItems);
   Menu.setApplicationMenu(applicationMenu);
 
