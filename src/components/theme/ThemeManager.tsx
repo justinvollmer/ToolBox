@@ -1,6 +1,7 @@
 import * as React from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { ThemeContext } from "./ThemeContext";
+const { ipcRenderer } = window;
 
 interface Props {
   children: React.ReactNode;
@@ -8,6 +9,16 @@ interface Props {
 
 function ThemeManager({ children }: Props) {
   const [mode, setMode] = React.useState<"light" | "dark">("light");
+
+  React.useEffect(() => {
+    ipcRenderer
+      .invoke("get-setting", "theme")
+      .then((storedTheme: "light" | "dark") => {
+        if (storedTheme) {
+          setMode(storedTheme);
+        }
+      });
+  }, []);
 
   const theme = createTheme({
     palette: {
@@ -23,7 +34,9 @@ function ThemeManager({ children }: Props) {
   });
 
   const toggleTheme = () => {
-    setMode((prevMode) => (prevMode === "light" ? "dark" : "light"));
+    const newMode = mode === "light" ? "dark" : "light";
+    setMode(newMode);
+    ipcRenderer.invoke("set-setting", "theme", newMode);
   };
 
   const themeStyles = {
