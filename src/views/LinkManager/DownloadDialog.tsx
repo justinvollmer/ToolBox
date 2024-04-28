@@ -33,7 +33,6 @@ interface DownloadDialogProps {
     url: string;
     filename: string;
     filetype: string;
-    progress: string;
   }[];
   open: boolean;
   onClose: () => void;
@@ -109,13 +108,8 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setStatusText("Downloading...");
     setStatusTextColor("orange");
 
-    const strippedDownloads = downloads.map(
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ({ progress, ...rest }) => rest
-    );
-
     try {
-      await downloadFromList(strippedDownloads, downloadFolder, delaySec);
+      await downloadFromList(downloads, downloadFolder, delaySec);
 
       setStatusText("Download finished successfully");
       setStatusTextColor("green");
@@ -216,9 +210,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                   {/* Medium width for filename */}
                   <TableCell sx={{ width: "10%" }} className="unselectable">
                     Filetype
-                  </TableCell>{" "}
-                  {/* Smaller width for filetype */}
-                  <TableCell className="unselectable">Progress</TableCell>
+                  </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -267,7 +259,6 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                         fullWidth
                       />
                     </TableCell>
-                    <TableCell>{download.progress}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
