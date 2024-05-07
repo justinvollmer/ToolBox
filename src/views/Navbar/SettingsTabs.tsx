@@ -210,10 +210,8 @@ function EncryptionSettingsTab() {
   const handleTextfieldTypeChange = () => {
     if (textfieldType == "password") {
       setTextFieldType("text");
-      return;
     } else {
       setTextFieldType("password");
-      return;
     }
   };
 
