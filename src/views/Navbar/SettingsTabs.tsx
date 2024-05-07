@@ -14,7 +14,12 @@ import {
   IconButton,
   InputAdornment,
 } from "@mui/material";
-import { FolderRounded, DeleteRounded, SaveRounded } from "@mui/icons-material";
+import {
+  FolderRounded,
+  DeleteRounded,
+  SaveRounded,
+  PasswordRounded,
+} from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import { ThemeContext } from "../../components/theme/ThemeContext";
 
@@ -175,6 +180,7 @@ function AppearanceSettingsTab() {
 
 function EncryptionSettingsTab() {
   const [encryptionKey, setEncryptionKey] = React.useState("");
+  const [textfieldType, setTextFieldType] = React.useState("password");
 
   React.useEffect(() => {
     ipcRenderer
@@ -201,6 +207,16 @@ function EncryptionSettingsTab() {
     ipcRenderer.invoke("delete-setting", "defaultEncryptionKey");
   };
 
+  const handleTextfieldTypeChange = () => {
+    if (textfieldType == "password") {
+      setTextFieldType("text");
+      return;
+    } else {
+      setTextFieldType("password");
+      return;
+    }
+  };
+
   return (
     <Box>
       <TextField
@@ -209,9 +225,13 @@ function EncryptionSettingsTab() {
         sx={{ mr: 1, width: "500px" }}
         value={encryptionKey}
         onChange={handleEncryptionKeyChange}
+        type={textfieldType}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
+              <IconButton onClick={handleTextfieldTypeChange}>
+                <PasswordRounded />
+              </IconButton>
               <IconButton onClick={handleSetEncryptionKey}>
                 <SaveRounded />
               </IconButton>
