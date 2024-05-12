@@ -1,11 +1,6 @@
 import * as React from "react";
 import {
   Box,
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Select,
-  SelectChangeEvent,
   styled,
   Switch,
   FormGroup,
@@ -28,7 +23,6 @@ const { ipcRenderer } = window;
 import "./Settings.scss";
 
 function GeneralSettingsTab() {
-  const [language, setLanguage] = React.useState("en");
   const [downloadFolder, setDownloadFolder] = React.useState("");
 
   React.useEffect(() => {
@@ -40,10 +34,6 @@ function GeneralSettingsTab() {
         }
       });
   }, []);
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setLanguage(event.target.value);
-  };
 
   const handleChooseDownloadFolder = async () => {
     try {
@@ -64,22 +54,6 @@ function GeneralSettingsTab() {
 
   return (
     <>
-      <Box sx={{ minWidth: 120, marginBottom: "10px" }}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Language</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={language}
-            label="Language"
-            onChange={handleChange}
-            disabled
-          >
-            <MenuItem value={"en"}>EN</MenuItem>
-            <MenuItem value={"de"}>DE</MenuItem>
-          </Select>
-        </FormControl>
-      </Box>
       <Box>
         <TextField
           label="Default Download Folder"
