@@ -19,7 +19,11 @@ import {
   Paper,
 } from "@mui/material";
 
-import { FolderRounded, DeleteRounded } from "@mui/icons-material";
+import {
+  FolderRounded,
+  DeleteRounded,
+  PublishedWithChangesRounded,
+} from "@mui/icons-material";
 
 import "./LinkManager.scss";
 
@@ -52,6 +56,8 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   const [statusTextColor, setStatusTextColor] = React.useState("black");
 
   const [preferredFilename, setPreferredFilename] = React.useState("");
+  const [targetedFiletype, setTargetedFiletype] = React.useState("");
+  const [replacementFiletype, setReplacementFiletype] = React.useState("");
 
   React.useEffect(() => {
     if (open) {
@@ -200,6 +206,8 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setStatusTextColor("black");
     setReady(false);
     setPreferredFilename("");
+    setTargetedFiletype("");
+    setReplacementFiletype("");
     resetToDefaultDownloadfolder();
     onClose();
   };
@@ -366,6 +374,31 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
             disabled={isLocked}
           >
             Clear All Filenames
+          </Button>
+        </Box>
+        <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+          <Typography>Replace</Typography>
+          <TextField
+            label="Targeted Filetype"
+            size="small"
+            sx={{ mr: 1, ml: 1 }}
+            value={targetedFiletype}
+            placeholder="png"
+            disabled={isLocked}
+            onChange={(e) => setTargetedFiletype(e.target.value)}
+          />
+          <Typography>with</Typography>
+          <TextField
+            label="Replacement Filetype"
+            size="small"
+            sx={{ mr: 1, ml: 1 }}
+            value={replacementFiletype}
+            placeholder="jpg"
+            disabled={isLocked}
+            onChange={(e) => setReplacementFiletype(e.target.value)}
+          />
+          <Button variant="outlined" disabled={isLocked}>
+            <PublishedWithChangesRounded />
           </Button>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
