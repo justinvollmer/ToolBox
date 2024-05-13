@@ -25,6 +25,8 @@ import {
   PublishedWithChangesRounded,
 } from "@mui/icons-material";
 
+import { useTheme } from "@mui/material/styles";
+
 import "./LinkManager.scss";
 
 import { downloadFromList } from "../../utils/DownloadManager";
@@ -43,6 +45,8 @@ interface DownloadDialogProps {
 }
 
 function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
+  const theme = useTheme();
+
   const [downloads, setDownloads] = React.useState(initList);
   const [downloadFolder, setDownloadFolder] = React.useState("");
   const [delaySec, setDelaySec] = React.useState(1);
@@ -53,7 +57,13 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
 
   const defaultStatusText: string = "Please click on 'Check list' first.";
   const [statusText, setStatusText] = React.useState(defaultStatusText);
+
   const [statusTextColor, setStatusTextColor] = React.useState("black");
+  React.useEffect(() => {
+    if (theme.palette.mode === "dark") {
+      setStatusTextColor("white");
+    }
+  }, [theme, setStatusTextColor]);
 
   const [preferredFilename, setPreferredFilename] = React.useState("");
   const [targetedFiletype, setTargetedFiletype] = React.useState("");
