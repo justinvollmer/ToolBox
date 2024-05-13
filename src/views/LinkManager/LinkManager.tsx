@@ -117,7 +117,6 @@ function LinkManager() {
       url: "COULD NOT LOAD",
       filename: "COULD NOT LOAD",
       filetype: "COULD NOT LOAD",
-      progress: "COULD NOT LOAD",
     },
   ]);
 
@@ -147,14 +146,12 @@ function LinkManager() {
     url: string;
     filename: string;
     filetype: string;
-    progress: string;
   }> => {
     const listFromText: Array<{
       id: number;
       url: string;
       filename: string;
       filetype: string;
-      progress: string;
     }> = [];
 
     const textSeperatedByLine = rawText.trim().split("\n");
@@ -177,7 +174,6 @@ function LinkManager() {
           url: url,
           filename: "",
           filetype: filetype,
-          progress: "NOT READY",
         });
       }
     });
