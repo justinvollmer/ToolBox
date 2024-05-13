@@ -199,6 +199,19 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setDownloads(updatedDownloads);
   };
 
+  // Handle filetype change
+  const handleFiletypeChange = () => {
+    const updatedDownloads = downloads.map((download) => {
+      if (download.filetype === targetedFiletype) {
+        return { ...download, filetype: replacementFiletype };
+      }
+      return download;
+    });
+    setDownloads(updatedDownloads);
+    setTargetedFiletype("");
+    setReplacementFiletype("");
+  };
+
   const onQuit = () => {
     setDownloads(initList);
     setDelaySec(1);
@@ -397,7 +410,11 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
             disabled={isLocked}
             onChange={(e) => setReplacementFiletype(e.target.value)}
           />
-          <Button variant="outlined" disabled={isLocked}>
+          <Button
+            variant="outlined"
+            disabled={isLocked}
+            onClick={handleFiletypeChange}
+          >
             <PublishedWithChangesRounded />
           </Button>
         </Box>
