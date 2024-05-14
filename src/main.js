@@ -39,6 +39,12 @@ const createMainWindow = () => {
   win.on("resize", () => {
     store.set("windowBounds", win.getBounds());
   });
+
+  let defaultListContent = store.get(
+    "defaultListContent",
+    "https://example.com/image.jpg\nhttps://example.com/image.jpg\nhttps://example.com/image.jpg"
+  );
+  store.set("defaultListContent", defaultListContent);
 };
 
 app.whenReady().then(createMainWindow);

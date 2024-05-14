@@ -23,7 +23,20 @@ const { ipcRenderer } = window;
 import "./Settings.scss";
 
 function GeneralSettingsTab() {
+  const initialDefault =
+    "https://example.com/image.jpg\nhttps://example.com/image.jpg\nhttps://example.com/image.jpg";
+  const [listContent, setListContent] = React.useState(initialDefault);
   const [downloadFolder, setDownloadFolder] = React.useState("");
+
+  React.useEffect(() => {
+    ipcRenderer
+      .invoke("get-setting", "defaultListContent")
+      .then((storedList: string) => {
+        if (storedList) {
+          setListContent(storedList);
+        }
+      });
+  }, []);
 
   React.useEffect(() => {
     ipcRenderer
@@ -34,6 +47,20 @@ function GeneralSettingsTab() {
         }
       });
   }, []);
+
+  const handleSetDefaultListContent = () => {
+    if (listContent == "") {
+      setListContent(initialDefault);
+      ipcRenderer.invoke("set-setting", "defaultListContent", initialDefault);
+    } else {
+      ipcRenderer.invoke("set-setting", "defaultListContent", listContent);
+    }
+  };
+
+  const handleClearDefaultListContent = () => {
+    setListContent(initialDefault);
+    ipcRenderer.invoke("set-setting", "defaultListContent", initialDefault);
+  };
 
   const handleChooseDownloadFolder = async () => {
     try {
@@ -54,6 +81,29 @@ function GeneralSettingsTab() {
 
   return (
     <>
+      <Box>
+        <TextField
+          label="Default List Content"
+          size="small"
+          sx={{ mr: 1, mb: 2, width: "500px" }}
+          value={listContent}
+          placeholder="Leave empty for initial default"
+          onChange={(e) => setListContent(e.target.value)}
+          multiline
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={handleSetDefaultListContent}>
+                  <SaveRounded />
+                </IconButton>
+                <IconButton onClick={handleClearDefaultListContent}>
+                  <DeleteRounded />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Box>
       <Box>
         <TextField
           label="Default Download Folder"
@@ -166,12 +216,6 @@ function EncryptionSettingsTab() {
       });
   }, []);
 
-  const handleEncryptionKeyChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setEncryptionKey(event.target.value);
-  };
-
   const handleSetEncryptionKey = () => {
     ipcRenderer.invoke("set-setting", "defaultEncryptionKey", encryptionKey);
   };
@@ -196,7 +240,7 @@ function EncryptionSettingsTab() {
         size="small"
         sx={{ mr: 1, width: "500px" }}
         value={encryptionKey}
-        onChange={handleEncryptionKeyChange}
+        onChange={(e) => setEncryptionKey(e.target.value)}
         type={textfieldType}
         InputProps={{
           endAdornment: (

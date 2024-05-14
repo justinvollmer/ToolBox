@@ -38,17 +38,28 @@ import "./LinkManager.scss";
 
 function LinkManager() {
   // SECTION - Textfield
-  const defaultValue =
-    "https://example.com/image.jpg\nhttps://example.com/image.jpg\nhttps://example.com/image.jpg";
+  const [defaultValue, setDefaultValue] = React.useState("");
+  const [text, setText] = React.useState("");
+  const [textPriorChange, setTextPriorChange] = React.useState("");
 
-  const [text, setText] = React.useState(defaultValue);
-  const [textPriorChange, setTextPriorChange] = React.useState(defaultValue);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [draggedText, setDraggedText] = React.useState("");
 
   const handleTextChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => setText(event.target.value);
+
+  React.useEffect(() => {
+    ipcRenderer
+      .invoke("get-setting", "defaultListContent")
+      .then((storedList: string) => {
+        if (storedList) {
+          setDefaultValue(storedList);
+          setText(storedList);
+          setTextPriorChange(storedList);
+        }
+      });
+  });
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
