@@ -39,6 +39,12 @@ const createMainWindow = () => {
   win.on("resize", () => {
     store.set("windowBounds", win.getBounds());
   });
+
+  let defaultListContent = store.get(
+    "defaultListContent",
+    "https://example.com/image.jpg\nhttps://example.com/image.jpg\nhttps://example.com/image.jpg"
+  );
+  store.set("defaultListContent", defaultListContent);
 };
 
 app.whenReady().then(createMainWindow);
@@ -165,4 +171,8 @@ ipcMain.handle("open-directory-dialog", async () => {
 
 ipcMain.on("request-cancel-download", (event) => {
   event.sender.send("cancel-download");
+});
+
+ipcMain.on("request-increase-progress", (event) => {
+  event.sender.send("increase-progress");
 });

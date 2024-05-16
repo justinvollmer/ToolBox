@@ -19,7 +19,13 @@ import {
   Paper,
 } from "@mui/material";
 
-import { FolderRounded, DeleteRounded } from "@mui/icons-material";
+import {
+  FolderRounded,
+  DeleteRounded,
+  PublishedWithChangesRounded,
+} from "@mui/icons-material";
+
+import { useTheme } from "@mui/material/styles";
 
 import "./LinkManager.scss";
 
@@ -39,6 +45,8 @@ interface DownloadDialogProps {
 }
 
 function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
+  const theme = useTheme();
+
   const [downloads, setDownloads] = React.useState(initList);
   const [downloadFolder, setDownloadFolder] = React.useState("");
   const [delaySec, setDelaySec] = React.useState(1);
@@ -50,8 +58,23 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   const defaultStatusText: string = "Please click on 'Check list' first.";
   const [statusText, setStatusText] = React.useState(defaultStatusText);
   const [statusTextColor, setStatusTextColor] = React.useState("black");
+  React.useEffect(() => {
+    if (theme.palette.mode === "dark") {
+      setStatusTextColor("white");
+    }
+  }, [theme, setStatusTextColor]);
+
+  const [downloadCounter, setDownloadCounter] = React.useState(0);
+  ipcRenderer.on("increase-progress", () => {
+    setDownloadCounter(downloadCounter + 1);
+    setStatusText(
+      "Downloading... (" + downloadCounter + "/" + downloads.length + ")"
+    );
+  });
 
   const [preferredFilename, setPreferredFilename] = React.useState("");
+  const [targetedFiletype, setTargetedFiletype] = React.useState("");
+  const [replacementFiletype, setReplacementFiletype] = React.useState("");
 
   React.useEffect(() => {
     if (open) {
@@ -120,13 +143,16 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setEligibleForDownload(false);
     setDownloadingState(true);
 
-    setStatusText("Downloading...");
+    setStatusText(
+      "Downloading... (" + downloadCounter + "/" + downloads.length + ")"
+    );
     setStatusTextColor("orange");
 
     try {
       await downloadFromList(downloads, downloadFolder, delaySec);
 
       setStatusText("Download finished successfully");
+      setDownloadCounter(0);
       setStatusTextColor("green");
     } catch (error) {
       setStatusText("Download failed");
@@ -193,6 +219,19 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setDownloads(updatedDownloads);
   };
 
+  // Handle filetype change
+  const handleFiletypeChange = () => {
+    const updatedDownloads = downloads.map((download) => {
+      if (download.filetype === targetedFiletype) {
+        return { ...download, filetype: replacementFiletype };
+      }
+      return download;
+    });
+    setDownloads(updatedDownloads);
+    setTargetedFiletype("");
+    setReplacementFiletype("");
+  };
+
   const onQuit = () => {
     setDownloads(initList);
     setDelaySec(1);
@@ -200,7 +239,10 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setStatusTextColor("black");
     setReady(false);
     setPreferredFilename("");
+    setTargetedFiletype("");
+    setReplacementFiletype("");
     resetToDefaultDownloadfolder();
+    setDownloadCounter(0);
     onClose();
   };
   return (
@@ -366,6 +408,35 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
             disabled={isLocked}
           >
             Clear All Filenames
+          </Button>
+        </Box>
+        <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
+          <Typography>Replace</Typography>
+          <TextField
+            label="Targeted Filetype"
+            size="small"
+            sx={{ mr: 1, ml: 1 }}
+            value={targetedFiletype}
+            placeholder="png"
+            disabled={isLocked}
+            onChange={(e) => setTargetedFiletype(e.target.value)}
+          />
+          <Typography>with</Typography>
+          <TextField
+            label="Replacement Filetype"
+            size="small"
+            sx={{ mr: 1, ml: 1 }}
+            value={replacementFiletype}
+            placeholder="jpg"
+            disabled={isLocked}
+            onChange={(e) => setReplacementFiletype(e.target.value)}
+          />
+          <Button
+            variant="outlined"
+            disabled={isLocked}
+            onClick={handleFiletypeChange}
+          >
+            <PublishedWithChangesRounded />
           </Button>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>

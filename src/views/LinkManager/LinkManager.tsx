@@ -38,17 +38,29 @@ import "./LinkManager.scss";
 
 function LinkManager() {
   // SECTION - Textfield
-  const defaultValue =
-    "https://example.com/image.jpg\nhttps://example.com/image.jpg\nhttps://example.com/image.jpg";
+  const [defaultValue, setDefaultValue] = React.useState("");
+  const [text, setText] = React.useState("");
+  const [textPriorChange, setTextPriorChange] = React.useState("");
 
-  const [text, setText] = React.useState(defaultValue);
-  const [textPriorChange, setTextPriorChange] = React.useState(defaultValue);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [draggedText, setDraggedText] = React.useState("");
 
   const handleTextChange = (event: {
     target: { value: React.SetStateAction<string> };
   }) => setText(event.target.value);
+
+  React.useEffect(() => {
+    ipcRenderer
+      .invoke("get-setting", "defaultListContent")
+      .then((storedList: string) => {
+        if (storedList) {
+          //const copyStoredList = storedList;
+          setDefaultValue(storedList);
+          setText(storedList);
+          setTextPriorChange(storedList);
+        }
+      });
+  }, []);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -117,7 +129,6 @@ function LinkManager() {
       url: "COULD NOT LOAD",
       filename: "COULD NOT LOAD",
       filetype: "COULD NOT LOAD",
-      progress: "COULD NOT LOAD",
     },
   ]);
 
@@ -147,14 +158,12 @@ function LinkManager() {
     url: string;
     filename: string;
     filetype: string;
-    progress: string;
   }> => {
     const listFromText: Array<{
       id: number;
       url: string;
       filename: string;
       filetype: string;
-      progress: string;
     }> = [];
 
     const textSeperatedByLine = rawText.trim().split("\n");
@@ -177,7 +186,6 @@ function LinkManager() {
           url: url,
           filename: "",
           filetype: filetype,
-          progress: "NOT READY",
         });
       }
     });

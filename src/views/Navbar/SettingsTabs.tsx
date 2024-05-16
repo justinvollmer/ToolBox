@@ -1,11 +1,6 @@
 import * as React from "react";
 import {
   Box,
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Select,
-  SelectChangeEvent,
   styled,
   Switch,
   FormGroup,
@@ -14,7 +9,12 @@ import {
   IconButton,
   InputAdornment,
 } from "@mui/material";
-import { FolderRounded, DeleteRounded, SaveRounded } from "@mui/icons-material";
+import {
+  FolderRounded,
+  DeleteRounded,
+  SaveRounded,
+  PasswordRounded,
+} from "@mui/icons-material";
 import { useTheme } from "@mui/material/styles";
 import { ThemeContext } from "../../components/theme/ThemeContext";
 
@@ -23,8 +23,20 @@ const { ipcRenderer } = window;
 import "./Settings.scss";
 
 function GeneralSettingsTab() {
-  const [language, setLanguage] = React.useState("en");
+  const initialDefault =
+    "https://example.com/image.jpg\nhttps://example.com/image.jpg\nhttps://example.com/image.jpg";
+  const [listContent, setListContent] = React.useState(initialDefault);
   const [downloadFolder, setDownloadFolder] = React.useState("");
+
+  React.useEffect(() => {
+    ipcRenderer
+      .invoke("get-setting", "defaultListContent")
+      .then((storedList: string) => {
+        if (storedList) {
+          setListContent(storedList);
+        }
+      });
+  }, []);
 
   React.useEffect(() => {
     ipcRenderer
@@ -36,8 +48,18 @@ function GeneralSettingsTab() {
       });
   }, []);
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setLanguage(event.target.value);
+  const handleSetDefaultListContent = () => {
+    if (listContent == "") {
+      setListContent(initialDefault);
+      ipcRenderer.invoke("set-setting", "defaultListContent", initialDefault);
+    } else {
+      ipcRenderer.invoke("set-setting", "defaultListContent", listContent);
+    }
+  };
+
+  const handleClearDefaultListContent = () => {
+    setListContent(initialDefault);
+    ipcRenderer.invoke("set-setting", "defaultListContent", initialDefault);
   };
 
   const handleChooseDownloadFolder = async () => {
@@ -59,21 +81,28 @@ function GeneralSettingsTab() {
 
   return (
     <>
-      <Box sx={{ minWidth: 120, marginBottom: "10px" }}>
-        <FormControl fullWidth>
-          <InputLabel id="demo-simple-select-label">Language</InputLabel>
-          <Select
-            labelId="demo-simple-select-label"
-            id="demo-simple-select"
-            value={language}
-            label="Language"
-            onChange={handleChange}
-            disabled
-          >
-            <MenuItem value={"en"}>EN</MenuItem>
-            <MenuItem value={"de"}>DE</MenuItem>
-          </Select>
-        </FormControl>
+      <Box>
+        <TextField
+          label="Default List Content"
+          size="small"
+          sx={{ mr: 1, mb: 2, width: "500px" }}
+          value={listContent}
+          placeholder="Leave empty for initial default"
+          onChange={(e) => setListContent(e.target.value)}
+          multiline
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={handleSetDefaultListContent}>
+                  <SaveRounded />
+                </IconButton>
+                <IconButton onClick={handleClearDefaultListContent}>
+                  <DeleteRounded />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+        />
       </Box>
       <Box>
         <TextField
@@ -175,6 +204,7 @@ function AppearanceSettingsTab() {
 
 function EncryptionSettingsTab() {
   const [encryptionKey, setEncryptionKey] = React.useState("");
+  const [textfieldType, setTextFieldType] = React.useState("password");
 
   React.useEffect(() => {
     ipcRenderer
@@ -186,12 +216,6 @@ function EncryptionSettingsTab() {
       });
   }, []);
 
-  const handleEncryptionKeyChange = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setEncryptionKey(event.target.value);
-  };
-
   const handleSetEncryptionKey = () => {
     ipcRenderer.invoke("set-setting", "defaultEncryptionKey", encryptionKey);
   };
@@ -201,6 +225,14 @@ function EncryptionSettingsTab() {
     ipcRenderer.invoke("delete-setting", "defaultEncryptionKey");
   };
 
+  const handleTextfieldTypeChange = () => {
+    if (textfieldType == "password") {
+      setTextFieldType("text");
+    } else {
+      setTextFieldType("password");
+    }
+  };
+
   return (
     <Box>
       <TextField
@@ -208,10 +240,14 @@ function EncryptionSettingsTab() {
         size="small"
         sx={{ mr: 1, width: "500px" }}
         value={encryptionKey}
-        onChange={handleEncryptionKeyChange}
+        onChange={(e) => setEncryptionKey(e.target.value)}
+        type={textfieldType}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
+              <IconButton onClick={handleTextfieldTypeChange}>
+                <PasswordRounded />
+              </IconButton>
               <IconButton onClick={handleSetEncryptionKey}>
                 <SaveRounded />
               </IconButton>
