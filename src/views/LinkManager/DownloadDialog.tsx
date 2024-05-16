@@ -57,7 +57,6 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
 
   const defaultStatusText: string = "Please click on 'Check list' first.";
   const [statusText, setStatusText] = React.useState(defaultStatusText);
-
   const [statusTextColor, setStatusTextColor] = React.useState("black");
   React.useEffect(() => {
     if (theme.palette.mode === "dark") {
