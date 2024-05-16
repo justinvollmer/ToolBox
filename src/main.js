@@ -172,3 +172,7 @@ ipcMain.handle("open-directory-dialog", async () => {
 ipcMain.on("request-cancel-download", (event) => {
   event.sender.send("cancel-download");
 });
+
+ipcMain.on("request-increase-progress", (event) => {
+  event.sender.send("increase-progress");
+});

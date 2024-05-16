@@ -64,6 +64,14 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     }
   }, [theme, setStatusTextColor]);
 
+  const [downloadCounter, setDownloadCounter] = React.useState(0);
+  ipcRenderer.on("increase-progress", () => {
+    setDownloadCounter(downloadCounter + 1);
+    setStatusText(
+      "Downloading... (" + downloadCounter + "/" + downloads.length + ")"
+    );
+  });
+
   const [preferredFilename, setPreferredFilename] = React.useState("");
   const [targetedFiletype, setTargetedFiletype] = React.useState("");
   const [replacementFiletype, setReplacementFiletype] = React.useState("");
@@ -135,13 +143,16 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setEligibleForDownload(false);
     setDownloadingState(true);
 
-    setStatusText("Downloading...");
+    setStatusText(
+      "Downloading... (" + downloadCounter + "/" + downloads.length + ")"
+    );
     setStatusTextColor("orange");
 
     try {
       await downloadFromList(downloads, downloadFolder, delaySec);
 
       setStatusText("Download finished successfully");
+      setDownloadCounter(0);
       setStatusTextColor("green");
     } catch (error) {
       setStatusText("Download failed");
@@ -231,6 +242,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setTargetedFiletype("");
     setReplacementFiletype("");
     resetToDefaultDownloadfolder();
+    setDownloadCounter(0);
     onClose();
   };
   return (

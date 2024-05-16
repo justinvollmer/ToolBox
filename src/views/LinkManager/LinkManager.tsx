@@ -54,12 +54,13 @@ function LinkManager() {
       .invoke("get-setting", "defaultListContent")
       .then((storedList: string) => {
         if (storedList) {
+          //const copyStoredList = storedList;
           setDefaultValue(storedList);
           setText(storedList);
           setTextPriorChange(storedList);
         }
       });
-  });
+  }, []);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);

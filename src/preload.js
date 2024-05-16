@@ -12,6 +12,7 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
       "send-message",
       "download-file",
       "request-cancel-download",
+      "request-increase-progress",
       "set-setting",
     ];
     if (validSendChannels.includes(channel)) {
@@ -22,6 +23,7 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
     let validReceiveChannels = [
       "download-file-list-progress",
       "cancel-download",
+      "increase-progress",
     ];
     if (
       validReceiveChannels.includes(channel) ||

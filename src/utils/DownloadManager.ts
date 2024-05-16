@@ -74,6 +74,8 @@ async function downloadFromList(
         successEvent,
         errorEvent,
       });
+
+      ipcRenderer.send("request-increase-progress");
     });
   }
   if (isCancelled) {
