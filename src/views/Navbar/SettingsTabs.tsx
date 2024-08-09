@@ -3,11 +3,16 @@ import {
   Box,
   styled,
   Switch,
+  Select,
+  SelectChangeEvent,
   FormGroup,
+  FormControl,
   FormControlLabel,
   TextField,
   IconButton,
   InputAdornment,
+  InputLabel,
+  MenuItem,
 } from "@mui/material";
 import {
   FolderRounded,
@@ -27,6 +32,8 @@ function GeneralSettingsTab() {
     "https://example.com/image.jpg\nhttps://example.com/image.jpg\nhttps://example.com/image.jpg";
   const [listContent, setListContent] = React.useState(initialDefault);
   const [downloadFolder, setDownloadFolder] = React.useState("");
+  const defaultBrowser = "msedge";
+  const [browser, setBrowser] = React.useState(defaultBrowser);
 
   React.useEffect(() => {
     ipcRenderer
@@ -44,6 +51,16 @@ function GeneralSettingsTab() {
       .then((storedFolder: string) => {
         if (storedFolder) {
           setDownloadFolder(storedFolder);
+        }
+      });
+  }, []);
+
+  React.useEffect(() => {
+    ipcRenderer
+      .invoke("get-setting", "defaultBrowser")
+      .then((storedBrowser: string) => {
+        if (storedBrowser) {
+          setBrowser(storedBrowser);
         }
       });
   }, []);
@@ -79,6 +96,19 @@ function GeneralSettingsTab() {
     ipcRenderer.invoke("delete-setting", "defaultDownloadFolder");
   };
 
+  const handleBrowserChange = async (event: SelectChangeEvent) => {
+    try {
+      ipcRenderer.invoke(
+        "set-setting",
+        "defaultBrowser",
+        event.target.value as string
+      );
+      setBrowser(event.target.value as string);
+    } catch (error) {
+      console.error("Failed to save browser setting", error);
+    }
+  };
+
   return (
     <>
       <Box>
@@ -108,7 +138,7 @@ function GeneralSettingsTab() {
         <TextField
           label="Default Download Folder"
           size="small"
-          sx={{ mr: 1, width: "500px" }}
+          sx={{ mr: 1, mb: 2, width: "500px" }}
           value={downloadFolder}
           InputProps={{
             readOnly: true,
@@ -124,6 +154,23 @@ function GeneralSettingsTab() {
             ),
           }}
         />
+      </Box>
+      <Box>
+        <FormControl sx={{ mr: 1, mb: 2, width: "500px" }}>
+          <InputLabel id="demo-browser-select-label">Browser</InputLabel>
+          <Select
+            labelId="demo-browser-select-label"
+            id="demo-browser-select"
+            value={browser}
+            label="Browser"
+            onChange={handleBrowserChange}
+          >
+            <MenuItem value={"msedge"}>MS Edge</MenuItem>
+            <MenuItem value={"chrome"}>Chrome</MenuItem>
+            <MenuItem value={"brave"}>Brave</MenuItem>
+            <MenuItem value={"firefox"}>Firefox</MenuItem>
+          </Select>
+        </FormControl>
       </Box>
     </>
   );
