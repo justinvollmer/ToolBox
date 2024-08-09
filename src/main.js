@@ -6,6 +6,7 @@ const { readFile, writeFile } = require("fs").promises;
 const path = require("path");
 const os = require("os");
 const Store = require("electron-store");
+const { exec } = require("child_process");
 
 const store = new Store();
 store.clear(); // NOTE - Remove before distribution
@@ -45,6 +46,9 @@ const createMainWindow = () => {
     "https://example.com/image.jpg\nhttps://example.com/image.jpg\nhttps://example.com/image.jpg"
   );
   store.set("defaultListContent", defaultListContent);
+
+  let defaultBrowser = store.get("defaultBrowser", "msedge");
+  store.set("defaultBrowser", defaultBrowser);
 };
 
 app.whenReady().then(createMainWindow);
@@ -168,6 +172,33 @@ ipcMain.handle("open-directory-dialog", async () => {
     return ""; // If no directory was selected
   }
 });
+
+ipcMain.handle(
+  "openInBrowser",
+  (event, url, browser = "msedge", incognito = false) => {
+    let command;
+
+    if (!incognito) {
+      command = `start ${browser} ${url}`;
+    } else {
+      if (browser == "msedge") {
+        command = `start ${browser} -inprivate ${url}`;
+      }
+      if (browser == "chrome" || browser == "brave") {
+        command = `start ${browser} -incognito ${url}`;
+      }
+      if (browser == "firefox") {
+        command = `start ${browser} -private-window ${url}`;
+      }
+    }
+
+    exec(command, (error) => {
+      if (error) {
+        console.error(`Error opening URL: ${error.message}`);
+      }
+    });
+  }
+);
 
 ipcMain.on("request-cancel-download", (event) => {
   event.sender.send("cancel-download");

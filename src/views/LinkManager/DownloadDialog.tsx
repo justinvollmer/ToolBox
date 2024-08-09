@@ -16,6 +16,7 @@ import {
   TableHead,
   TableRow,
   Typography,
+  Tooltip,
   Paper,
 } from "@mui/material";
 
@@ -23,6 +24,8 @@ import {
   FolderRounded,
   DeleteRounded,
   PublishedWithChangesRounded,
+  OpenInNewRounded,
+  PolicyRounded,
 } from "@mui/icons-material";
 
 import { useTheme } from "@mui/material/styles";
@@ -50,6 +53,8 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
   const [downloads, setDownloads] = React.useState(initList);
   const [downloadFolder, setDownloadFolder] = React.useState("");
   const [delaySec, setDelaySec] = React.useState(1);
+
+  const [browser, setBrowser] = React.useState("");
 
   const [isEligibleForDownload, setEligibleForDownload] = React.useState(false);
   const [isLocked, setLocked] = React.useState(false);
@@ -94,8 +99,24 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
       });
   };
 
+  const resetToDefaultBrowser = () => {
+    ipcRenderer
+      .invoke("get-setting", "defaultBrowser")
+      .then((storedBrowser: string) => {
+        if (storedBrowser) {
+          setBrowser(storedBrowser);
+        } else {
+          setBrowser("msedge");
+        }
+      });
+  };
+
   React.useEffect(() => {
     resetToDefaultDownloadfolder();
+  }, []);
+
+  React.useEffect(() => {
+    resetToDefaultBrowser();
   }, []);
 
   const handleCheck = () => {
@@ -120,6 +141,9 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
       setStatusText("The download folder is empty or invalid!");
       setStatusTextColor("red");
       return;
+    } else if (delaySec < 0) {
+      setStatusText("A negative interval cannot be set!");
+      setStatusTextColor("red");
     } else {
       setStatusText("Ready to start the download!");
       setStatusTextColor("green");
@@ -232,6 +256,15 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
     setReplacementFiletype("");
   };
 
+  // Open in browser
+  const handleOpenInBrowser = (url: string, incognito: boolean | undefined) => {
+    if (incognito == undefined) {
+      incognito = false;
+    }
+
+    ipcRenderer.invoke("openInBrowser", url, browser, incognito);
+  };
+
   const onQuit = () => {
     setDownloads(initList);
     setDelaySec(1);
@@ -271,6 +304,9 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                   {/* Medium width for filename */}
                   <TableCell sx={{ width: "10%" }} className="unselectable">
                     Filetype
+                  </TableCell>
+                  <TableCell sx={{ width: "5%" }} className="unselectable">
+                    Actions
                   </TableCell>
                 </TableRow>
               </TableHead>
@@ -319,6 +355,31 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                         }
                         fullWidth
                       />
+                    </TableCell>
+                    <TableCell>
+                      <Box display="flex" justifyContent="center">
+                        <Tooltip title="Open in browser" placement="top-start">
+                          <IconButton
+                            onClick={() =>
+                              handleOpenInBrowser(download.url, false)
+                            }
+                          >
+                            <OpenInNewRounded />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip
+                          title="Open in incognito browser"
+                          placement="top-start"
+                        >
+                          <IconButton
+                            onClick={() =>
+                              handleOpenInBrowser(download.url, true)
+                            }
+                          >
+                            <PolicyRounded />
+                          </IconButton>
+                        </Tooltip>
+                      </Box>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -431,13 +492,11 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
             disabled={isLocked}
             onChange={(e) => setReplacementFiletype(e.target.value)}
           />
-          <Button
-            variant="outlined"
-            disabled={isLocked}
-            onClick={handleFiletypeChange}
-          >
-            <PublishedWithChangesRounded />
-          </Button>
+          <Tooltip title="Replace" placement="top-start">
+            <IconButton disabled={isLocked} onClick={handleFiletypeChange}>
+              <PublishedWithChangesRounded />
+            </IconButton>
+          </Tooltip>
         </Box>
         <Box sx={{ display: "flex", alignItems: "center", mt: 2 }}>
           <TextField

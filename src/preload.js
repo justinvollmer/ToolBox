@@ -51,4 +51,6 @@ contextBridge.exposeInMainWorld("ipcRenderer", {
   setSetting: async (key, value) =>
     ipcRenderer.invoke("set-setting", key, value),
   deleteSetting: async (key) => ipcRenderer.invoke("delete-setting", key),
+  openInBrowser: async (url, browser, incognito) =>
+    ipcRenderer.invoke("openInBrowser", url, browser, incognito),
 });
