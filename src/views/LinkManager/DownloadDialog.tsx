@@ -1,32 +1,29 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as React from "react";
-import {
-  Box,
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Button,
-  IconButton,
-  InputAdornment,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
-  Tooltip,
-  Paper,
-} from "@mui/material";
 
-import {
-  FolderRounded,
-  DeleteRounded,
-  PublishedWithChangesRounded,
-  OpenInNewRounded,
-  PolicyRounded,
-} from "@mui/icons-material";
+import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import Button from "@mui/material/Button";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Typography from "@mui/material/Typography";
+import Tooltip from "@mui/material/Tooltip";
+import Paper from "@mui/material/Paper";
+
+import FolderRoundedIcon from "@mui/icons-material/FolderRounded";
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import PublishedWithChangesRoundedIcon from "@mui/icons-material/PublishedWithChangesRounded";
+import OpenInNewRoundedIcon from "@mui/icons-material/OpenInNewRounded";
+import PolicyRoundedIcon from "@mui/icons-material/PolicyRounded";
 
 import { useTheme } from "@mui/material/styles";
 
@@ -364,7 +361,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                               handleOpenInBrowser(download.url, false)
                             }
                           >
-                            <OpenInNewRounded />
+                            <OpenInNewRoundedIcon />
                           </IconButton>
                         </Tooltip>
                         <Tooltip
@@ -376,7 +373,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                               handleOpenInBrowser(download.url, true)
                             }
                           >
-                            <PolicyRounded />
+                            <PolicyRoundedIcon />
                           </IconButton>
                         </Tooltip>
                       </Box>
@@ -494,7 +491,7 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
           />
           <Tooltip title="Replace" placement="top-start">
             <IconButton disabled={isLocked} onClick={handleFiletypeChange}>
-              <PublishedWithChangesRounded />
+              <PublishedWithChangesRoundedIcon />
             </IconButton>
           </Tooltip>
         </Box>
@@ -513,13 +510,13 @@ function DownloadDialog({ initList, open, onClose }: DownloadDialogProps) {
                     disabled={isLocked}
                     onClick={handleChooseDownloadFolder}
                   >
-                    <FolderRounded />
+                    <FolderRoundedIcon />
                   </IconButton>
                   <IconButton
                     disabled={isLocked}
                     onClick={handleClearDownloadFolder}
                   >
-                    <DeleteRounded />
+                    <DeleteRoundedIcon />
                   </IconButton>
                 </InputAdornment>
               ),

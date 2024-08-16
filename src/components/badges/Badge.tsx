@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Tooltip } from "@mui/material";
+import Tooltip from "@mui/material/Tooltip";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";

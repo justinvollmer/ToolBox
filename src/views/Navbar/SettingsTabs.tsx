@@ -1,19 +1,18 @@
 import * as React from "react";
-import {
-  Box,
-  styled,
-  Switch,
-  Select,
-  SelectChangeEvent,
-  FormGroup,
-  FormControl,
-  FormControlLabel,
-  TextField,
-  IconButton,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
-} from "@mui/material";
+
+import Box from "@mui/material/Box";
+import Switch from "@mui/material/Switch";
+import Select from "@mui/material/Select";
+import { styled, SelectChangeEvent } from "@mui/material";
+import FormGroup from "@mui/material/FormGroup";
+import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+
 import {
   FolderRounded,
   DeleteRounded,

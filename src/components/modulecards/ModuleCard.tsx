@@ -5,7 +5,9 @@ import CardMedia from "@mui/material/CardMedia";
 import Modal from "@mui/material/Modal";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
+import Button from "@mui/material/Button";
+import CardActionArea from "@mui/material/CardActionArea";
+import CardActions from "@mui/material/CardActions";
 import { useTheme } from "@mui/material/styles";
 
 import { WorkInProgress } from "../badges/BadgeCollection";

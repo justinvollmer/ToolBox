@@ -1,4 +1,4 @@
-import { Avatar } from "@mui/material/";
+import Avatar from "@mui/material/Avatar";
 import { LeadDeveloper } from "../../components/badges/BadgeCollection";
 
 import "./About.scss";
