@@ -10,6 +10,7 @@ import BaseLayout from "./components/BaseLayout";
 import Home from "./views/Home/Home";
 import About from "./views/About/About";
 import LinkManager from "./views/LinkManager/LinkManager";
+import Randomizer from "./views/Randomizer/Randomizer";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
               <Route index element={<Home />} />
               <Route path="about" element={<About />} />
               <Route path="linkmanager" element={<LinkManager />} />
+              <Route path="randomizer" element={<Randomizer />} />
             </Route>
           </Routes>
         </Box>
