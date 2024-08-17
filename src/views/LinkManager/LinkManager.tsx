@@ -1,29 +1,33 @@
 /* eslint-disable no-useless-escape */
 import * as React from "react";
 
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import Backdrop from "@mui/material/Backdrop";
-import SpeedDial from "@mui/material/SpeedDial";
-import SpeedDialAction from "@mui/material/SpeedDialAction";
-import TextField from "@mui/material/TextField";
-import Dialog from "@mui/material/Dialog";
-import DialogTitle from "@mui/material/DialogTitle";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogActions from "@mui/material/DialogActions";
+import {
+  Box,
+  Button,
+  Backdrop,
+  SpeedDial,
+  SpeedDialAction,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from "@mui/material";
 
-import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
-import SaveAsRoundedIcon from "@mui/icons-material/SaveAsRounded";
-import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import EnhancedEncryptionRoundedIcon from "@mui/icons-material/EnhancedEncryptionRounded";
-import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import DownloadRoundedIcon from "@mui/icons-material/DownloadRounded";
-import FileUploadRoundedIcon from "@mui/icons-material/FileUploadRounded";
-import RestartAltRoundedIcon from "@mui/icons-material/RestartAltRounded";
-import VisibilityRoundedIcon from "@mui/icons-material/VisibilityRounded";
-import EditRoundedIcon from "@mui/icons-material/EditRounded";
-import FilterListRoundedIcon from "@mui/icons-material/FilterListRounded";
+import {
+  SaveRounded,
+  SaveAsRounded,
+  ClearRounded,
+  EnhancedEncryptionRounded,
+  DeleteRounded,
+  DownloadRounded,
+  FileUploadRounded,
+  RestartAltRounded,
+  VisibilityRounded,
+  EditRounded,
+  FilterListRounded,
+} from "@mui/icons-material";
 
 import FilterDialog from "./FilterDialog";
 import EncryptionDialog from "./EncryptionDialog";
@@ -232,7 +236,7 @@ function LinkManager() {
   // SECTION - Speed Dial Buttons
   const readOnlyActions = [
     {
-      icon: <EditRoundedIcon />,
+      icon: <EditRounded />,
       name: "Edit",
       function: () => {
         handleEditMode();
@@ -240,28 +244,28 @@ function LinkManager() {
       },
     },
     {
-      icon: <FileUploadRoundedIcon />,
+      icon: <FileUploadRounded />,
       name: "Import",
       function: () => {
         openFileDialog();
       },
     },
     {
-      icon: <SaveRoundedIcon />,
+      icon: <SaveRounded />,
       name: "Export",
       function: () => {
         exportFile();
       },
     },
     {
-      icon: <EnhancedEncryptionRoundedIcon />,
+      icon: <EnhancedEncryptionRounded />,
       name: "Encryption",
       function: () => {
         handleOpenEncryption();
       },
     },
     {
-      icon: <DownloadRoundedIcon />,
+      icon: <DownloadRounded />,
       name: "Download Manager",
       function: () => {
         handleOpenDownloadManager();
@@ -271,7 +275,7 @@ function LinkManager() {
 
   const editActions = [
     {
-      icon: <SaveAsRoundedIcon />,
+      icon: <SaveAsRounded />,
       name: "Save",
       function: () => {
         handleReadOnlyMode();
@@ -279,7 +283,7 @@ function LinkManager() {
       },
     },
     {
-      icon: <ClearRoundedIcon />,
+      icon: <ClearRounded />,
       name: "Cancel",
       function: () => {
         setText(textPriorChange);
@@ -288,7 +292,7 @@ function LinkManager() {
       },
     },
     {
-      icon: <RestartAltRoundedIcon />,
+      icon: <RestartAltRounded />,
       name: "Reset",
       function: () => {
         setText(defaultValue);
@@ -298,12 +302,12 @@ function LinkManager() {
       },
     },
     {
-      icon: <DeleteRoundedIcon />,
+      icon: <DeleteRounded />,
       name: "Clear",
       function: () => setText(""),
     },
     {
-      icon: <FilterListRoundedIcon />,
+      icon: <FilterListRounded />,
       name: "Filter",
       function: () => {
         handleOpenFilter();
@@ -386,7 +390,7 @@ function LinkManager() {
           <SpeedDial
             ariaLabel="SpeedDial tooltip example"
             sx={{ position: "absolute", bottom: 16, right: 16 }}
-            icon={<VisibilityRoundedIcon />}
+            icon={<VisibilityRounded />}
             onClose={handleClose}
             onOpen={handleOpen}
             open={open}
@@ -408,7 +412,7 @@ function LinkManager() {
           <SpeedDial
             ariaLabel="SpeedDial tooltip example"
             sx={{ position: "absolute", bottom: 16, right: 16 }}
-            icon={<EditRoundedIcon />}
+            icon={<EditRounded />}
             onClose={handleClose}
             onOpen={handleOpen}
             open={open}
