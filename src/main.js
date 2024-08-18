@@ -132,10 +132,10 @@ ipcMain.on(
   }
 );
 
-ipcMain.handle("open-file-dialog", async (event) => {
+ipcMain.handle("open-file-dialog", async (event, filters) => {
   const { filePaths } = await dialog.showOpenDialog({
     properties: ["openFile"],
-    filters: [{ name: "Text Files", extensions: ["txt"] }],
+    filters: filters,
     defaultPath: path.join(os.homedir(), "Desktop"),
   });
   if (filePaths.length > 0) {
@@ -145,10 +145,10 @@ ipcMain.handle("open-file-dialog", async (event) => {
   return "";
 });
 
-ipcMain.handle("save-file-dialog", async (event, content) => {
+ipcMain.handle("save-file-dialog", async (event, content, filters) => {
   const { filePath } = await dialog.showSaveDialog({
     buttonLabel: "Save text",
-    filters: [{ name: "Text Files", extensions: ["txt"] }],
+    filters: filters,
     defaultPath: path.join(os.homedir(), "Desktop", "file.txt"),
   });
 
