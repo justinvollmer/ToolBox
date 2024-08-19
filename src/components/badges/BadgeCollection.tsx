@@ -1,5 +1,5 @@
 import Badge from "./Badge";
-import { TerminalRounded as DevIcon } from "@mui/icons-material";
+import { TerminalRounded } from "@mui/icons-material";
 
 function LeadDeveloper() {
   const title: string = "Lead Developer";
@@ -11,7 +11,7 @@ function LeadDeveloper() {
     <Badge
       title={title}
       description={description}
-      icon={<DevIcon />}
+      icon={<TerminalRounded />}
       iconColor="#1DA1F2"
       learnMoreLink="/about"
     />

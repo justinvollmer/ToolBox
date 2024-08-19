@@ -1,5 +1,6 @@
 /* eslint-disable no-useless-escape */
 import * as React from "react";
+
 import {
   Box,
   Button,
@@ -26,7 +27,7 @@ import {
   VisibilityRounded,
   EditRounded,
   FilterListRounded,
-} from "@mui/icons-material/";
+} from "@mui/icons-material";
 
 import FilterDialog from "./FilterDialog";
 import EncryptionDialog from "./EncryptionDialog";
@@ -206,8 +207,12 @@ function LinkManager() {
 
   // SECTION - File Import
   const openFileDialog = async () => {
+    const filters: Array<object> = [
+      { name: "Text Files", extensions: ["txt"] },
+    ];
+
     try {
-      const content = await ipcRenderer.invoke("open-file-dialog");
+      const content = await ipcRenderer.invoke("open-file-dialog", filters);
       if (content && content.length > 0) {
         setText(content.trim());
       }
@@ -219,8 +224,16 @@ function LinkManager() {
 
   // SECTION - File Export
   const exportFile = async () => {
+    const filters: Array<object> = [
+      { name: "Text Files", extensions: ["txt"] },
+    ];
+
     try {
-      const success = await ipcRenderer.invoke("save-file-dialog", text);
+      const success = await ipcRenderer.invoke(
+        "save-file-dialog",
+        text,
+        filters
+      );
       if (success) {
         console.log("File saved successfully");
       } else {

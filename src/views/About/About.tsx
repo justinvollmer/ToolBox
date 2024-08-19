@@ -1,4 +1,4 @@
-import { Avatar } from "@mui/material/";
+import Avatar from "@mui/material/Avatar";
 import { LeadDeveloper } from "../../components/badges/BadgeCollection";
 
 import "./About.scss";
@@ -9,7 +9,7 @@ function About() {
       <div className="profile-container unselectable">
         <h1>ToolBox</h1>
         <p id="version" className="role">
-          Release Version | v1.2.0
+          Release Version | v1.3.0
         </p>
         <div className="about">
           <h2>About</h2>

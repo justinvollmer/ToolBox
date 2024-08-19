@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import {
   AppBar,
   Box,
@@ -11,9 +12,12 @@ import {
   MenuItem,
   Menu,
 } from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import ViewInArIcon from "@mui/icons-material/ViewInAr";
-import SettingsIcon from "@mui/icons-material/Settings";
+
+import {
+  MenuRounded,
+  ViewInArRounded,
+  SettingsRounded,
+} from "@mui/icons-material";
 
 import SettingsDialog from "./SettingsDialog";
 
@@ -57,7 +61,9 @@ function Navbar() {
       <AppBar position="static" sx={{ background: "#0b3781" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <ViewInArIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
+            <ViewInArRounded
+              sx={{ display: { xs: "none", md: "flex" }, mr: 1 }}
+            />
             <Typography
               className="logo-typography-global"
               variant="h6"
@@ -86,7 +92,7 @@ function Navbar() {
                 onClick={handleOpenNavMenu}
                 color="inherit"
               >
-                <MenuIcon />
+                <MenuRounded />
               </IconButton>
               <Menu
                 id="menu-appbar"
@@ -113,7 +119,9 @@ function Navbar() {
                 ))}
               </Menu>
             </Box>
-            <ViewInArIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
+            <ViewInArRounded
+              sx={{ display: { xs: "flex", md: "none" }, mr: 1 }}
+            />
             <Typography
               className="logo-typography-global"
               variant="h5"
@@ -148,7 +156,7 @@ function Navbar() {
             <Box sx={{ flexGrow: 0 }}>
               <Tooltip title="Open settings">
                 <IconButton onClick={handleOpenSettingsDialog} sx={{ p: 0 }}>
-                  <SettingsIcon
+                  <SettingsRounded
                     sx={{
                       display: { xs: "none", md: "flex" },
                       mr: 1,

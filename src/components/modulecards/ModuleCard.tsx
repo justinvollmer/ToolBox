@@ -1,12 +1,16 @@
 import * as React from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import CardMedia from "@mui/material/CardMedia";
-import Modal from "@mui/material/Modal";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import { Button, CardActionArea, CardActions } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
+import {
+  Card,
+  CardContent,
+  CardMedia,
+  Modal,
+  Box,
+  Typography,
+  Button,
+  CardActionArea,
+  CardActions,
+  useTheme,
+} from "@mui/material";
 
 import { WorkInProgress } from "../badges/BadgeCollection";
 

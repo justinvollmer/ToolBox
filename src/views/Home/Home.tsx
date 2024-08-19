@@ -24,10 +24,32 @@ function LinkManagerCard() {
   );
 }
 
+function RandomizerCard() {
+  const title = "Randomizer";
+  const description =
+    "Pick a random item from a multi layer JSON object array.";
+  const moduleLink = "/randomizer";
+  const info =
+    "Pick a random item from a multi layer JSON object. The JSON has an array with objects which each has a string title and content array. The content array has objects containing a name, description and an array called options. The randomizer will pick the a random item and then will one layer deeper to pick a random content item.";
+
+  return (
+    <ModuleCard
+      title={title}
+      description={description}
+      moduleLink={moduleLink}
+      info={info}
+      released={true}
+      mainDeveloper="Justin Vollmer"
+      mainDeveloperBadge={<LeadDeveloper />}
+    />
+  );
+}
+
 function Home() {
   return (
     <div className="main-container">
       <LinkManagerCard />
+      <RandomizerCard />
     </div>
   );
 }

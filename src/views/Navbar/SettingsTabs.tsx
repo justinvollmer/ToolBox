@@ -1,9 +1,10 @@
 import * as React from "react";
+
 import {
   Box,
-  styled,
   Switch,
   Select,
+  styled,
   SelectChangeEvent,
   FormGroup,
   FormControl,
@@ -14,6 +15,7 @@ import {
   InputLabel,
   MenuItem,
 } from "@mui/material";
+
 import {
   FolderRounded,
   DeleteRounded,
@@ -244,6 +246,7 @@ function AppearanceSettingsTab() {
         label="Theme <Light | Dark>"
         checked={themeSwitchState}
         onChange={handleThemeSwitch}
+        className="unselectable"
       />
     </FormGroup>
   );

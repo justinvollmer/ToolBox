@@ -1,9 +1,5 @@
 import * as React from "react";
-import { Tooltip } from "@mui/material";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
-import Modal from "@mui/material/Modal";
-import { useTheme } from "@mui/material/styles";
+import { Tooltip, Box, Typography, Modal, useTheme } from "@mui/material";
 
 import "./Badge.scss";
 

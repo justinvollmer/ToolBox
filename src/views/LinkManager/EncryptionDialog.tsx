@@ -1,17 +1,16 @@
 import * as React from "react";
-import {
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Grid,
-  InputAdornment,
-  Typography,
-} from "@mui/material";
 
-import { KeyRounded } from "@mui/icons-material/";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import Grid from "@mui/material/Grid";
+import InputAdornment from "@mui/material/InputAdornment";
+import Typography from "@mui/material/Typography";
+
+import KeyRoundedIcon from "@mui/icons-material/KeyRounded";
 
 import {
   encrypt,
@@ -164,7 +163,7 @@ function EncryptionDialog({ text, setText, open, onClose }: EncryptionProps) {
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
-                    <KeyRounded />
+                    <KeyRoundedIcon />
                   </InputAdornment>
                 ),
               }}
