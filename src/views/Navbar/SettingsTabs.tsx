@@ -246,6 +246,7 @@ function AppearanceSettingsTab() {
         label="Theme <Light | Dark>"
         checked={themeSwitchState}
         onChange={handleThemeSwitch}
+        className="unselectable"
       />
     </FormGroup>
   );
