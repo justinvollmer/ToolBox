@@ -1,6 +1,14 @@
 import * as React from "react";
 
-import { Box, Button, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  FormGroup,
+  FormControlLabel,
+  TextField,
+  Typography,
+} from "@mui/material";
 
 import "./Randomizer.scss";
 
@@ -22,7 +30,7 @@ const jsonTestData = {
     {
       name: "Item 3",
       description: "Desc",
-      options: ["Op1tion", "Option2"],
+      options: ["Option1", "Option2"],
     },
   ],
 };
@@ -31,16 +39,34 @@ function Randomizer() {
   const [isShowingJSON, setShowingJSON] = React.useState(false);
   const [jsonObj, setJsonObj] = React.useState(Object);
   const [output, setOutput] = React.useState("");
-  const [isLocked, setLocked] = React.useState(true);
+  const [jsonObjLength, setJsonObjLength] = React.useState(0);
+
+  const [amount, setAmount] = React.useState(1);
+  const [isAllowingDuplicates, setAllowingDuplicates] = React.useState(false);
+
+  const [isLockedReset, setLockedReset] = React.useState(true);
+  const [isLockedClear, setLockedClear] = React.useState(true);
+  const [isVisibleExample, setVisibleExample] = React.useState(true);
 
   const handleShowingJSON = () => {
     setShowingJSON(!isShowingJSON);
   };
 
+  const handleClear = () => {
+    setOutput("");
+    setLockedClear(true);
+  };
+
   const handleReset = () => {
     setOutput("");
     setJsonObj(Object);
-    setLocked(true);
+    setAmount(1);
+    setJsonObjLength(0);
+    setLockedReset(true);
+    setLockedClear(true);
+    setVisibleExample(true);
+    setShowingJSON(false);
+    setAllowingDuplicates(false);
   };
 
   const openFileDialog = async () => {
@@ -54,7 +80,9 @@ function Randomizer() {
 
       if (content) {
         setJsonObj(content);
-        setLocked(false);
+        setJsonObjLength(content.content.length);
+        setLockedReset(false);
+        setVisibleExample(false);
       }
     } catch (error) {
       console.error("Error opening file dialog:", error);
@@ -79,9 +107,57 @@ function Randomizer() {
       }`;
 
       setOutput(res);
+      setLockedClear(false);
+      setShowingJSON(false);
     } catch (error) {
       setOutput(
         `Error: There has been an error in identifying the JSON structure! (${error})`
+      );
+    }
+  };
+
+  const bulkRandomize = () => {
+    if (!(amount <= jsonObjLength && amount > 0) && !isAllowingDuplicates) {
+      setOutput(
+        `Error: There has been an error in setting the amount of generated output!`
+      );
+      return;
+    }
+
+    const jsonObjInstance = JSON.parse(JSON.stringify(jsonObj));
+    const resArr: Array<string> = [];
+
+    try {
+      for (let i = 1; i <= amount; i++) {
+        const n1: number = getRandomNumber(jsonObjInstance.content.length);
+        const n2: number = getRandomNumber(
+          jsonObjInstance.content[n1 - 1].options.length
+        );
+
+        const newOutput: string = `${i}. Name: ${
+          jsonObjInstance.content[n1 - 1].name
+        } | Description: ${
+          jsonObjInstance.content[n1 - 1].description
+        } > Option: ${jsonObjInstance.content[n1 - 1].options[n2 - 1]}`;
+
+        resArr.push(newOutput);
+
+        if (!isAllowingDuplicates) {
+          jsonObjInstance.content.splice(n1 - 1, 1);
+        }
+      }
+
+      let res = "";
+      resArr.forEach((element) => {
+        res += "\n" + element;
+      });
+
+      setOutput(res.trim());
+      setLockedClear(false);
+      setShowingJSON(false);
+    } catch (error) {
+      setOutput(
+        `Error: There has been an error in identifying the JSON structure or length! (${error})`
       );
     }
   };
@@ -119,57 +195,138 @@ function Randomizer() {
               sx={{ mt: "20px", mb: "20px", mr: "5px" }}
               onClick={openFileDialog}
             >
-              Import JSON List
+              Import JSON
             </Button>
-            <Button
-              variant="contained"
-              color="success"
-              disabled={isLocked}
-              sx={{ mt: "20px", mb: "20px", ml: "5px", mr: "5px" }}
-              onClick={randomize}
-            >
-              Start Randomize
-            </Button>
-            <Button
-              variant="contained"
-              color="error"
-              sx={{ mt: "20px", mb: "20px", ml: "5px" }}
-              onClick={handleReset}
-            >
-              Reset
-            </Button>
+            {!isLockedReset && (
+              <Button
+                variant="contained"
+                color="success"
+                sx={{ mt: "20px", mb: "20px", ml: "5px", mr: "5px" }}
+                onClick={randomize}
+              >
+                Start Randomize
+              </Button>
+            )}
+            {!isLockedClear && (
+              <Button
+                variant="contained"
+                color="error"
+                sx={{ mt: "20px", mb: "20px", ml: "5px", mr: "5px" }}
+                onClick={handleClear}
+              >
+                Clear Output
+              </Button>
+            )}
+            {!isLockedReset && (
+              <Button
+                variant="contained"
+                color="error"
+                sx={{ mt: "20px", mb: "20px", ml: "5px" }}
+                onClick={handleReset}
+              >
+                Reset
+              </Button>
+            )}
           </div>
-          <Typography className="unselectable">{output}</Typography>
-          <Typography className="unselectable" sx={{ mt: "40px" }}>
-            The imported JSON should have the following structure:
-          </Typography>
-          {!isShowingJSON && (
-            <Button
-              variant="contained"
-              size="small"
-              color="secondary"
-              onClick={handleShowingJSON}
-              sx={{ mt: "20px", mb: "20px" }}
-            >
-              Show JSON example
-            </Button>
-          )}
-          {isShowingJSON && (
-            <pre
-              onClick={handleShowingJSON}
+          {!isLockedReset && (
+            <div
               style={{
-                textAlign: "left",
-                backgroundColor: "#f5f5f5",
-                padding: "15px",
-                borderRadius: "5px",
-                maxWidth: "600px",
-                overflowX: "auto",
-                marginTop: "20px",
+                display: "flex",
+                flexDirection: "row",
               }}
-              className="unselectable"
             >
-              {JSON.stringify(jsonTestData, null, 2)}
-            </pre>
+              <TextField
+                label="Amount"
+                size="small"
+                sx={{ mr: 1, width: "120px" }}
+                type="number"
+                value={amount}
+                onChange={(e) => {
+                  const value = parseFloat(e.target.value);
+                  if (
+                    !isNaN(value) &&
+                    value <= jsonObjLength &&
+                    value > 0 &&
+                    !isAllowingDuplicates
+                  ) {
+                    setAmount(value);
+                  } else if (
+                    isAllowingDuplicates &&
+                    !isNaN(value) &&
+                    value > 0
+                  ) {
+                    setAmount(value);
+                  } else {
+                    setAmount(1);
+                  }
+                }}
+              />
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label={<Typography>allow duplicates</Typography>}
+                  checked={isAllowingDuplicates}
+                  onChange={() => {
+                    setAllowingDuplicates(!isAllowingDuplicates);
+                  }}
+                />
+              </FormGroup>
+              <Button
+                variant="contained"
+                color="success"
+                sx={{ mb: "20px", ml: "5px", mr: "5px" }}
+                onClick={bulkRandomize}
+              >
+                Bulk Randomize
+              </Button>
+            </div>
+          )}
+          {!isLockedReset && (
+            <TextField
+              value={output}
+              fullWidth
+              multiline
+              className="unselectable"
+              label="Output"
+              InputProps={{
+                readOnly: true,
+              }}
+            />
+          )}
+          {isVisibleExample && (
+            <div>
+              <Typography className="unselectable" sx={{ mt: "10px" }}>
+                The imported JSON should have the following structure:
+              </Typography>
+              {!isShowingJSON && (
+                <Button
+                  variant="contained"
+                  size="small"
+                  color="secondary"
+                  onClick={handleShowingJSON}
+                  sx={{ mt: "20px", mb: "20px" }}
+                >
+                  Show JSON example
+                </Button>
+              )}
+              {isShowingJSON && (
+                <pre
+                  onClick={handleShowingJSON}
+                  style={{
+                    textAlign: "left",
+                    backgroundColor: "#f5f5f5",
+                    padding: "15px",
+                    borderRadius: "5px",
+                    maxWidth: "600px",
+                    overflowX: "auto",
+                    marginTop: "20px",
+                  }}
+                  className="unselectable"
+                >
+                  {JSON.stringify(jsonTestData, null, 2)}
+                </pre>
+              )}
+            </div>
           )}
         </div>
       </Box>
