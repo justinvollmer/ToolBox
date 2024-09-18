@@ -286,6 +286,7 @@ function Randomizer() {
               value={output}
               fullWidth
               multiline
+              maxRows={20}
               className="unselectable"
               label="Output"
               InputProps={{
