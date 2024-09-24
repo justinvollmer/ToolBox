@@ -9,7 +9,7 @@ function About() {
       <div className="profile-container unselectable">
         <h1>ToolBox</h1>
         <p id="version" className="role">
-          Release Version | v1.4.1
+          Release Version | v1.5.0
         </p>
         <div className="about">
           <h2>About</h2>
