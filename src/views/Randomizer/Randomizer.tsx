@@ -21,6 +21,7 @@ const jsonTestData = {
       name: "Item 1",
       description: "Desc",
       options: ["Option1", "Option2"],
+      ref: ["https://example.com"],
     },
     {
       name: "Item 2",
@@ -100,11 +101,15 @@ function Randomizer() {
         jsonObj.content[n1 - 1].options.length
       );
 
-      const res: string = `Name: ${
-        jsonObj.content[n1 - 1].name
-      } | Description: ${jsonObj.content[n1 - 1].description} > Option: ${
-        jsonObj.content[n1 - 1].options[n2 - 1]
-      }`;
+      let res: string = `Name: ${jsonObj.content[n1 - 1].name} | Description: ${
+        jsonObj.content[n1 - 1].description
+      } > Option: ${jsonObj.content[n1 - 1].options[n2 - 1]}`;
+
+      if (jsonObj.content[n1 - 1].ref) {
+        for (let i = 0; i < jsonObj.content[n1 - 1].ref.length; i++) {
+          res += `\n\t${jsonObj.content[n1 - 1].ref[i]}`;
+        }
+      }
 
       setOutput(res);
       setLockedClear(false);
@@ -134,11 +139,17 @@ function Randomizer() {
           jsonObjInstance.content[n1 - 1].options.length
         );
 
-        const newOutput: string = `${i}. Name: ${
+        let newOutput: string = `${i}. Name: ${
           jsonObjInstance.content[n1 - 1].name
         } | Description: ${
           jsonObjInstance.content[n1 - 1].description
         } > Option: ${jsonObjInstance.content[n1 - 1].options[n2 - 1]}`;
+
+        if (jsonObjInstance.content[n1 - 1].ref) {
+          for (let j = 0; j < jsonObjInstance.content[n1 - 1].ref.length; j++) {
+            newOutput += `\n\t${jsonObjInstance.content[n1 - 1].ref[j]}`;
+          }
+        }
 
         resArr.push(newOutput);
 
@@ -239,6 +250,7 @@ function Randomizer() {
                 label="Amount"
                 size="small"
                 sx={{ mr: 1, width: "120px" }}
+                variant="filled"
                 type="number"
                 value={amount}
                 onChange={(e) => {
